@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Narration Master app icon">
+  <defs>
+    <linearGradient id="g" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#2F6F62"/>
+      <stop offset="100%" stop-color="#1F4B41"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="48" fill="url(#g)"/>
+  <path d="M92 68h72c18 0 32 14 32 32v56c0 18-14 32-32 32H92L58 204V100c0-18 14-32 32-32zm26 40h46v18h-46zm0 38h46v18h-46zm-18-38h12v18h-12zm0 38h12v18h-12z" fill="#F6F3EC" opacity="0.98"/>
+</svg>
