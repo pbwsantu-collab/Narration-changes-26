@@ -36,6 +36,61 @@ function updateConnectionState() {
   document.body.classList.toggle('offline', !navigator.onLine);
 }
 
+function showView(name, jumpId) {
+  const target = document.getElementById(`view-${name}`);
+  if (!target) return;
+  document.querySelectorAll('.view').forEach((view) => view.classList.remove('active'));
+  target.classList.add('active');
+  document.querySelectorAll('.navitem').forEach((item) => item.classList.remove('active'));
+  document.querySelectorAll(`.navitem[data-view="${name}"]`).forEach((item) => {
+    if (!jumpId || item.dataset.jump === jumpId) item.classList.add('active');
+  });
+  document.getElementById('sidebar')?.classList.remove('open');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (name === 'rules' && jumpId) {
+    setTimeout(() => document.getElementById(`rule-${jumpId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+  }
+}
+
+function bindExistingControls() {
+  document.querySelectorAll('[data-view]').forEach((element) => {
+    if (element.dataset.enhancementBound) return;
+    element.dataset.enhancementBound = 'true';
+    element.addEventListener('click', () => showView(element.dataset.view, element.dataset.jump));
+  });
+
+  document.getElementById('menuToggle')?.addEventListener('click', () => {
+    document.getElementById('sidebar')?.classList.toggle('open');
+  });
+
+  const btnEn = document.getElementById('btnEn');
+  const btnBn = document.getElementById('btnBn');
+  const setLang = (lang) => {
+    document.body.classList.toggle('lang-en', lang === 'en');
+    document.body.classList.toggle('lang-bn', lang === 'bn');
+    btnEn?.classList.toggle('on', lang === 'en');
+    btnBn?.classList.toggle('on', lang === 'bn');
+    try { localStorage.setItem('narr_lang', lang); } catch (_) {}
+  };
+  btnEn?.addEventListener('click', () => setLang('en'));
+  btnBn?.addEventListener('click', () => setLang('bn'));
+
+  document.getElementById('themeToggle')?.addEventListener('click', () => {
+    const root = document.documentElement;
+    const current = root.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('narr_theme', next); } catch (_) {}
+  });
+
+  try {
+    const lang = localStorage.getItem('narr_lang');
+    if (lang === 'en' || lang === 'bn') setLang(lang);
+    const theme = localStorage.getItem('narr_theme');
+    if (theme === 'dark' || theme === 'light') document.documentElement.setAttribute('data-theme', theme);
+  } catch (_) {}
+}
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {
     try {
@@ -73,7 +128,10 @@ window.addEventListener('appinstalled', () => {
   installBanner.hidden = true;
   deferredPrompt = null;
 });
-
 window.addEventListener('online', updateConnectionState);
 window.addEventListener('offline', updateConnectionState);
-updateConnectionState();
+
+window.addEventListener('DOMContentLoaded', () => {
+  bindExistingControls();
+  updateConnectionState();
+});
