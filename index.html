@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Narration Master — Direct &amp; Indirect Speech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F6F3EC;
+  --paper-2:#EFEADD;
+  --ink:#20261F;
+  --ink-soft:#4B5548;
+  --ink-faint:#8B9585;
+  --teal:#2F6F62;
+  --teal-deep:#1F4B41;
+  --mustard:#C1852B;
+  --mustard-soft:#F2E2C4;
+  --card:#FFFFFF;
+  --line:rgba(32,38,31,0.14);
+  --line-soft:rgba(32,38,31,0.08);
+  --shadow:0 1px 2px rgba(32,38,31,0.06);
+  --ok:#2F6F45;
+  --bad:#A6432F;
+  --font-head:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-body:"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-bn:"Hind Siliguri", "Inter", sans-serif;
+  --radius:10px;
+}
+:root:not([data-theme="light"]){ }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#191C17;
+    --paper-2:#20241D;
+    --ink:#EDEAE0;
+    --ink-soft:#B8BFAF;
+    --ink-faint:#7C8574;
+    --teal:#6FBDA8;
+    --teal-deep:#89D2BE;
+    --mustard:#E0A44C;
+    --mustard-soft:#3A3221;
+    --card:#222620;
+    --line:rgba(237,234,224,0.14);
+    --line-soft:rgba(237,234,224,0.08);
+    --shadow:0 1px 3px rgba(0,0,0,0.4);
+    --ok:#7BC98E;
+    --bad:#E08876;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#191C17;
+  --paper-2:#20241D;
+  --ink:#EDEAE0;
+  --ink-soft:#B8BFAF;
+  --ink-faint:#7C8574;
+  --teal:#6FBDA8;
+  --teal-deep:#89D2BE;
+  --mustard:#E0A44C;
+  --mustard-soft:#3A3221;
+  --card:#222620;
+  --line:rgba(237,234,224,0.14);
+  --line-soft:rgba(237,234,224,0.08);
+  --shadow:0 1px 3px rgba(0,0,0,0.4);
+  --ok:#7BC98E;
+  --bad:#E08876;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--font-body);
+  line-height:1.55;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+body.lang-bn .en{display:none;}
+body.lang-en .bn{display:none;}
+.bn{font-family:var(--font-bn);}
+::selection{background:var(--mustard-soft);}
+a{color:var(--teal-deep);}
+
+/* App shell */
+.shell{display:flex; min-height:100vh;}
+.sidebar{
+  width:270px; flex:0 0 270px;
+  background:var(--paper-2);
+  border-right:1px solid var(--line);
+  padding:20px 14px 90px;
+  position:sticky; top:0; height:100vh; overflow-y:auto;
+}
+.brand{display:flex; align-items:baseline; gap:8px; padding:4px 8px 16px; border-bottom:1px solid var(--line); margin-bottom:14px;}
+.brand-mark{
+  width:34px;height:34px;border-radius:8px;background:linear-gradient(155deg,var(--teal),var(--teal-deep));
+  display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-head);font-weight:700;font-size:17px;flex:0 0 34px;
+}
+.brand-text{font-family:var(--font-head); font-size:17px; font-weight:600; letter-spacing:.2px;}
+.brand-sub{font-size:11px; color:var(--ink-faint); margin-top:1px;}
+
+.searchbox{position:relative; margin:0 6px 16px;}
+.searchbox input{
+  width:100%; padding:9px 12px 9px 32px; border-radius:8px; border:1px solid var(--line);
+  background:var(--card); color:var(--ink); font-size:13.5px; font-family:var(--font-body);
+}
+.searchbox input:focus{outline:2px solid var(--teal); outline-offset:1px;}
+.searchbox svg{position:absolute; left:10px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:var(--ink-faint);}
+
+.navgroup{margin-bottom:6px;}
+.navgroup-label{font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-faint); padding:10px 10px 4px;}
+.navitem{
+  display:flex; align-items:center; gap:9px; width:100%; text-align:left; padding:8px 10px; border-radius:8px;
+  border:none; background:transparent; color:var(--ink-soft); font-size:13.8px; cursor:pointer; font-family:var(--font-body);
+}
+.navitem:hover{background:var(--line-soft); color:var(--ink);}
+.navitem.active{background:var(--teal); color:#fff; font-weight:600;}
+.navitem .dot{width:6px;height:6px;border-radius:50%; background:currentColor; opacity:.55; flex:0 0 6px;}
+
+.main{flex:1; min-width:0; display:flex; flex-direction:column;}
+.topbar{
+  position:sticky; top:0; z-index:5; background:var(--paper); border-bottom:1px solid var(--line);
+  display:flex; align-items:center; gap:12px; padding:12px 22px;
+}
+.menu-toggle{display:none; background:none; border:1px solid var(--line); border-radius:8px; padding:7px 9px; color:var(--ink); cursor:pointer;}
+.topbar-title{font-family:var(--font-head); font-size:15px; font-weight:600; flex:1;}
+.langtoggle{display:flex; border:1px solid var(--line); border-radius:20px; overflow:hidden;}
+.langtoggle button{border:none; background:var(--card); color:var(--ink-soft); padding:6px 13px; font-size:12.5px; cursor:pointer; font-family:var(--font-body); font-weight:600;}
+.langtoggle button.on{background:var(--teal); color:#fff;}
+.themetoggle{border:1px solid var(--line); background:var(--card); border-radius:20px; padding:6px 11px; font-size:12.5px; cursor:pointer; color:var(--ink-soft);}
+
+.content{padding:26px 30px 80px; max-width:900px; width:100%; margin:0 auto;}
+.view{display:none;}
+.view.active{display:block; animation:fadein .25s ease;}
+@keyframes fadein{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;}}
+
+/* Home */
+.hero{
+  background:linear-gradient(155deg, var(--teal-deep), var(--teal));
+  border-radius:16px; padding:34px 30px; color:#fff; margin-bottom:26px; position:relative; overflow:hidden;
+}
+.hero::after{content:""; position:absolute; right:-40px; top:-40px; width:180px; height:180px; border-radius:50%; background:rgba(255,255,255,0.08);}
+.hero h1{font-family:var(--font-head); font-size:clamp(24px,4vw,32px); margin:0 0 8px; font-weight:600; line-height:1.2;}
+.hero p{margin:0; opacity:.92; font-size:14.5px; max-width:60ch;}
+.hero-stats{display:flex; gap:22px; margin-top:20px; flex-wrap:wrap;}
+.hero-stat b{display:block; font-family:var(--font-head); font-size:22px;}
+.hero-stat span{font-size:11.5px; opacity:.85;}
+
+.quick-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-bottom:30px;}
+.quick-card{
+  background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px 17px; cursor:pointer;
+  text-align:left; font-family:var(--font-body); box-shadow:var(--shadow);
+}
+.quick-card:hover{border-color:var(--teal);}
+.quick-card h3{margin:0 0 5px; font-family:var(--font-head); font-size:16px; font-weight:600; color:var(--ink);}
+.quick-card p{margin:0; font-size:12.8px; color:var(--ink-soft);}
+.quick-card .tag{display:inline-block; margin-top:9px; font-size:10.5px; padding:2px 8px; border-radius:20px; background:var(--mustard-soft); color:var(--mustard); font-weight:600;}
+
+h2.section-title{font-family:var(--font-head); font-size:22px; font-weight:600; margin:0 0 4px;}
+.section-sub{color:var(--ink-soft); font-size:13.5px; margin:0 0 20px;}
+
+/* Rule cards */
+.rule-card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:20px 22px; margin-bottom:16px; box-shadow:var(--shadow);}
+.rule-card h3{font-family:var(--font-head); font-size:17px; margin:0 0 10px; color:var(--teal-deep); font-weight:600;}
+.rule-card p{margin:0 0 10px; font-size:14px; color:var(--ink);}
+.rule-card ul{margin:0 0 10px; padding-left:20px; font-size:14px;}
+.rule-card li{margin-bottom:6px;}
+.example{
+  background:var(--paper-2); border-left:3px solid var(--teal); border-radius:0 8px 8px 0; padding:9px 13px; margin:8px 0; font-size:13.5px;
+}
+.example .d{color:var(--ink-soft);}
+.example .arrow{color:var(--mustard); font-weight:700; margin:0 6px;}
+.example .i{color:var(--ink); font-weight:500;}
+table.rule-table{width:100%; border-collapse:collapse; font-size:13px; margin:10px 0;}
+table.rule-table th, table.rule-table td{border:1px solid var(--line); padding:7px 9px; text-align:left;}
+table.rule-table th{background:var(--paper-2); font-weight:600;}
+
+/* Question bank */
+.bank-toolbar{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; align-items:center;}
+.filter-select{padding:8px 12px; border-radius:8px; border:1px solid var(--line); background:var(--card); color:var(--ink); font-size:13px; font-family:var(--font-body);}
+.count-pill{font-size:12px; color:var(--ink-faint); margin-left:auto;}
+
+.flashcard{
+  background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; margin-bottom:12px; box-shadow:var(--shadow); cursor:pointer;
+}
+.flashcard .fc-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+.flashcard .fc-tag{font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--mustard); font-weight:700;}
+.flashcard .fc-q{font-size:14.5px; margin-top:6px; color:var(--ink); font-weight:500;}
+.flashcard .fc-hint{font-size:11.5px; color:var(--ink-faint); margin-top:8px;}
+.flashcard .fc-a{
+  display:none; margin-top:12px; padding-top:12px; border-top:1px dashed var(--line);
+  font-size:14px; color:var(--teal-deep); font-weight:500;
+}
+.flashcard.revealed .fc-a{display:block;}
+.flashcard.revealed .fc-hint{display:none;}
+
+/* Exam mode */
+.exam-setup{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:24px; box-shadow:var(--shadow);}
+.exam-setup label{display:block; font-size:13px; font-weight:600; margin:14px 0 6px;}
+.exam-setup select, .exam-setup input[type=number]{padding:8px 12px; border-radius:8px; border:1px solid var(--line); background:var(--paper); color:var(--ink); font-size:13.5px; width:100%; max-width:260px;}
+.btn{
+  display:inline-flex; align-items:center; gap:6px; background:var(--teal); color:#fff; border:none; padding:10px 18px;
+  border-radius:8px; font-size:13.8px; font-weight:600; cursor:pointer; font-family:var(--font-body);
+}
+.btn:hover{background:var(--teal-deep);}
+.btn.ghost{background:transparent; color:var(--teal-deep); border:1px solid var(--line);}
+.btn.ghost:hover{border-color:var(--teal);}
+.btn.warn{background:var(--bad);}
+.btn:disabled{opacity:.5; cursor:not-allowed;}
+
+.exam-progress{display:flex; align-items:center; gap:12px; margin-bottom:18px;}
+.progress-track{flex:1; height:7px; background:var(--line-soft); border-radius:6px; overflow:hidden;}
+.progress-fill{height:100%; background:var(--teal); border-radius:6px; transition:width .25s ease;}
+.exam-score{font-size:12.5px; color:var(--ink-soft); white-space:nowrap;}
+
+.exam-card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:28px 26px; box-shadow:var(--shadow); text-align:center;}
+.exam-card .fc-tag{display:block; margin-bottom:14px;}
+.exam-card .fc-q{font-size:17px; margin-bottom:6px;}
+.exam-reveal-area{min-height:70px; margin:16px 0;}
+.exam-answer{font-size:15px; color:var(--teal-deep); font-weight:500; padding-top:14px; border-top:1px dashed var(--line);}
+.exam-actions{display:flex; gap:10px; justify-content:center; margin-top:18px; flex-wrap:wrap;}
+.exam-summary{text-align:center; padding:20px 0;}
+.exam-summary .big{font-family:var(--font-head); font-size:44px; color:var(--teal-deep); margin:8px 0;}
+
+.timer-pill{font-size:12.5px; padding:4px 11px; border-radius:20px; background:var(--mustard-soft); color:var(--mustard); font-weight:700;}
+
+.toc-jump{position:sticky; top:57px; background:var(--paper); padding:6px 0 12px; margin-bottom:6px; display:flex; gap:8px; flex-wrap:wrap; z-index:3;}
+.toc-jump a{font-size:12px; padding:5px 11px; border-radius:20px; background:var(--card); border:1px solid var(--line); color:var(--ink-soft); text-decoration:none;}
+.toc-jump a:hover{border-color:var(--teal); color:var(--teal-deep);}
+
+.empty-state{text-align:center; padding:50px 20px; color:var(--ink-faint);}
+
+footer.appfoot{text-align:center; font-size:11.5px; color:var(--ink-faint); padding:26px 0 10px;}
+
+@media (max-width: 860px){
+  .sidebar{position:fixed; left:0; top:0; z-index:20; transform:translateX(-100%); transition:transform .2s ease; box-shadow:0 0 0 100vmax rgba(0,0,0,0);}
+  .sidebar.open{transform:translateX(0); box-shadow:0 0 40px rgba(0,0,0,.35);}
+  .menu-toggle{display:inline-flex;}
+  .content{padding:20px 16px 70px;}
+  .hero{padding:24px 20px;}
+}
+</style>
+</head>
+<body class="lang-en">
+<div class="shell">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">N</div>
+      <div>
+        <div class="brand-text">Narration Master</div>
+        <div class="brand-sub"><span class="en">Direct &amp; Indirect Speech</span><span class="bn">প্রত্যক্ষ ও পরোক্ষ উক্তি</span></div>
+      </div>
+    </div>
+
+    <div class="searchbox">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="searchInput" type="text" placeholder="Search rules, examples…">
+      <div id="searchResults" style="position:absolute; top:40px; left:0; right:0; background:var(--card); border:1px solid var(--line); border-radius:8px; max-height:260px; overflow-y:auto; z-index:30; display:none; box-shadow:0 6px 20px rgba(0,0,0,.15);"></div>
+    </div>
+
+    <div class="navgroup">
+      <div class="navgroup-label"><span class="en">Overview</span><span class="bn">সারসংক্ষেপ</span></div>
+      <button class="navitem" data-view="home"><span class="dot"></span><span class="en">Home</span><span class="bn">হোম</span></button>
+    </div>
+
+    <div class="navgroup">
+      <div class="navgroup-label"><span class="en">Rules &amp; Concepts</span><span class="bn">নিয়মাবলী</span></div>
+      <button class="navitem" data-view="rules" data-jump="fundamentals"><span class="dot"></span><span class="en">Fundamentals</span><span class="bn">মূল ধারণা</span></button>
+      <button class="navitem" data-view="rules" data-jump="assertive"><span class="dot"></span><span class="en">Assertive Sentences</span><span class="bn">বিবৃতিমূলক বাক্য</span></button>
+      <button class="navitem" data-view="rules" data-jump="interrogative"><span class="dot"></span><span class="en">Questions</span><span class="bn">প্রশ্নবাচক বাক্য</span></button>
+      <button class="navitem" data-view="rules" data-jump="tags"><span class="dot"></span><span class="en">Question Tags</span><span class="bn">প্রশ্ন-ট্যাগ</span></button>
+      <button class="navitem" data-view="rules" data-jump="imperative"><span class="dot"></span><span class="en">Imperatives &amp; "Let"</span><span class="bn">অনুজ্ঞাসূচক ও Let</span></button>
+      <button class="navitem" data-view="rules" data-jump="modals"><span class="dot"></span><span class="en">Modal Verbs</span><span class="bn">মোডাল ক্রিয়া</span></button>
+      <button class="navitem" data-view="rules" data-jump="optative"><span class="dot"></span><span class="en">Optative &amp; Exclamatory</span><span class="bn">ইচ্ছাসূচক ও বিস্ময়সূচক</span></button>
+      <button class="navitem" data-view="rules" data-jump="timeplace"><span class="dot"></span><span class="en">Time &amp; Place Words</span><span class="bn">কাল ও স্থানসূচক শব্দ</span></button>
+      <button class="navitem" data-view="rules" data-jump="misc"><span class="dot"></span><span class="en">Dialogues &amp; Summaries</span><span class="bn">কথোপকথন ও সারাংশ</span></button>
+    </div>
+
+    <div class="navgroup">
+      <div class="navgroup-label"><span class="en">Practice</span><span class="bn">অনুশীলন</span></div>
+      <button class="navitem" data-view="bank"><span class="dot"></span><span class="en">Question Bank</span><span class="bn">প্রশ্ন ব্যাংক</span></button>
+      <button class="navitem" data-view="exam"><span class="dot"></span><span class="en">Exam Mode</span><span class="bn">পরীক্ষা মোড</span></button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="topbar-title" id="topbarTitle"><span class="en">Direct &amp; Indirect Narration</span><span class="bn">প্রত্যক্ষ ও পরোক্ষ উক্তি</span></div>
+      <button class="themetoggle" id="themeToggle">🌓</button>
+      <div class="langtoggle">
+        <button id="btnEn" class="on">EN</button>
+        <button id="btnBn">বাংলা</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- HOME -->
+      <section class="view active" id="view-home">
+        <div class="hero">
+          <h1><span class="en">Master Direct &amp; Indirect Speech</span><span class="bn">প্রত্যক্ষ ও পরোক্ষ উক্তি আয়ত্ত করো</span></h1>
+          <p><span class="en">Every rule, exception, and exercise from your grammar book, reorganised into one clear course — with a bilingual explanation, a full practice bank, and a self-testing exam mode.</span>
+          <span class="bn">তোমার ব্যাকরণ বইয়ের প্রতিটি নিয়ম, ব্যতিক্রম ও অনুশীলনী একত্র করে সাজানো হয়েছে — দ্বিভাষিক ব্যাখ্যা, সম্পূর্ণ প্রশ্ন ব্যাংক এবং নিজে পরীক্ষা দেওয়ার মোড সহ।</span></p>
+          <div class="hero-stats">
+            <div class="hero-stat"><b id="statRules">9</b><span class="en">Rule sections</span><span class="bn">নিয়ম বিভাগ</span></div>
+            <div class="hero-stat"><b id="statQ">0</b><span class="en">Practice sentences</span><span class="bn">অনুশীলনী বাক্য</span></div>
+            <div class="hero-stat"><b>7</b><span class="en">Original exercises covered</span><span class="bn">মূল অনুশীলনী কভার</span></div>
+          </div>
+        </div>
+
+        <h2 class="section-title"><span class="en">Jump in</span><span class="bn">শুরু করো</span></h2>
+        <p class="section-sub"><span class="en">Pick a starting point — everything is cross-linked, so you can move between rules and practice freely.</span><span class="bn">যেকোনো জায়গা থেকে শুরু করো — নিয়ম ও অনুশীলনের মধ্যে অবাধে যাতায়াত করা যায়।</span></p>
+        <div class="quick-grid">
+          <button class="quick-card" data-view="rules" data-jump="fundamentals">
+            <h3><span class="en">Learn the rules</span><span class="bn">নিয়ম শেখো</span></h3>
+            <p><span class="en">Tense shifts, pronoun changes, reporting verbs and every special case, explained with examples.</span><span class="bn">কাল পরিবর্তন, সর্বনাম পরিবর্তন, reporting verb ও বিশেষ ক্ষেত্রসমূহ উদাহরণসহ।</span></p>
+            <span class="tag"><span class="en">9 sections</span><span class="bn">৯টি বিভাগ</span></span>
+          </button>
+          <button class="quick-card" data-view="bank">
+            <h3><span class="en">Practice with flashcards</span><span class="bn">ফ্ল্যাশকার্ডে অনুশীলন</span></h3>
+            <p><span class="en">Tap any sentence to reveal the model answer. Filter by exercise or sentence type.</span><span class="bn">উত্তর দেখতে যেকোনো বাক্যে ক্লিক করো। অনুশীলনী বা বাক্যের ধরন অনুযায়ী ফিল্টার করো।</span></p>
+            <span class="tag"><span class="en">Click to reveal</span><span class="bn">ক্লিক করে উত্তর দেখো</span></span>
+          </button>
+          <button class="quick-card" data-view="exam">
+            <h3><span class="en">Take a timed exam</span><span class="bn">সময়-নির্ধারিত পরীক্ষা</span></h3>
+            <p><span class="en">Random sentences, one at a time. Mark yourself, track your score, and see where you're weak.</span><span class="bn">এলোমেলো বাক্য, একে একে। নিজে মূল্যায়ন করো, স্কোর দেখো, দুর্বলতা চিহ্নিত করো।</span></p>
+            <span class="tag"><span class="en">Self-scored</span><span class="bn">নিজে স্কোর করো</span></span>
+          </button>
+        </div>
+
+        <h2 class="section-title"><span class="en">Course map</span><span class="bn">কোর্স ম্যাপ</span></h2>
+        <p class="section-sub"><span class="en">The full sequence, in the order it's best learned.</span><span class="bn">শেখার জন্য সর্বোত্তম ক্রম।</span></p>
+        <div class="quick-grid" id="courseMap"></div>
+      </section>
+
+      <!-- RULES -->
+      <section class="view" id="view-rules">
+        <h2 class="section-title"><span class="en">Rules &amp; Concepts</span><span class="bn">নিয়মাবলী ও ধারণা</span></h2>
+        <p class="section-sub"><span class="en">Everything from the textbook, reorganised by sentence type.</span><span class="bn">পাঠ্যবইয়ের সবকিছু বাক্যের ধরন অনুযায়ী সাজানো।</span></p>
+        <div class="toc-jump" id="tocJump"></div>
+        <div id="rulesContainer"></div>
+      </section>
+
+      <!-- BANK -->
+      <section class="view" id="view-bank">
+        <h2 class="section-title"><span class="en">Question Bank</span><span class="bn">প্রশ্ন ব্যাংক</span></h2>
+        <p class="section-sub"><span class="en">Every exercise from the book, with model answers. Tap a card to check yourself.</span><span class="bn">বইয়ের সব অনুশীলনী, নমুনা উত্তরসহ। নিজেকে যাচাই করতে কার্ডে ক্লিক করো।</span></p>
+        <div class="bank-toolbar">
+          <select class="filter-select" id="bankExerciseFilter"></select>
+          <select class="filter-select" id="bankTypeFilter"></select>
+          <span class="count-pill" id="bankCount"></span>
+        </div>
+        <div id="bankContainer"></div>
+      </section>
+
+      <!-- EXAM -->
+      <section class="view" id="view-exam">
+        <h2 class="section-title"><span class="en">Exam Mode</span><span class="bn">পরীক্ষা মোড</span></h2>
+        <p class="section-sub"><span class="en">Test yourself against random sentences from the whole book.</span><span class="bn">পুরো বই থেকে এলোমেলো বাক্য নিয়ে নিজেকে যাচাই করো।</span></p>
+
+        <div id="examSetup" class="exam-setup">
+          <label><span class="en">Topic</span><span class="bn">বিষয়</span></label>
+          <select id="examTopic"></select>
+          <label><span class="en">Number of questions</span><span class="bn">প্রশ্ন সংখ্যা</span></label>
+          <input type="number" id="examCount" min="5" max="40" value="10">
+          <label><span class="en">Time per question (seconds, 0 = untimed)</span><span class="bn">প্রতি প্রশ্নে সময় (সেকেন্ড, ০ = সময়সীমাহীন)</span></label>
+          <input type="number" id="examTime" min="0" max="120" value="0">
+          <div style="margin-top:20px;"><button class="btn" id="startExamBtn"><span class="en">Start exam</span><span class="bn">পরীক্ষা শুরু করো</span></button></div>
+          <p style="margin-top:16px; font-size:12px; color:var(--ink-faint);" id="examBestScore"></p>
+        </div>
+
+        <div id="examRunning" style="display:none;">
+          <div class="exam-progress">
+            <span class="exam-score" id="examProgressLabel"></span>
+            <div class="progress-track"><div class="progress-fill" id="examProgressFill" style="width:0%"></div></div>
+            <span class="timer-pill" id="examTimerPill" style="display:none;"></span>
+          </div>
+          <div class="exam-card">
+            <span class="fc-tag" id="examCardTag"></span>
+            <div class="fc-q" id="examCardQ"></div>
+            <div class="exam-reveal-area">
+              <div class="exam-answer" id="examCardA" style="display:none;"></div>
+            </div>
+            <div class="exam-actions" id="examActionsReveal">
+              <button class="btn ghost" id="examShowAnswerBtn"><span class="en">Show answer</span><span class="bn">উত্তর দেখাও</span></button>
+              <button class="btn warn" id="examQuitBtn"><span class="en">End exam</span><span class="bn">পরীক্ষা শেষ করো</span></button>
+            </div>
+            <div class="exam-actions" id="examActionsGrade" style="display:none;">
+              <button class="btn" id="examCorrectBtn" style="background:var(--ok);"><span class="en">✓ I got it right</span><span class="bn">✓ সঠিক ছিল</span></button>
+              <button class="btn" id="examWrongBtn" style="background:var(--bad);"><span class="en">✗ I got it wrong</span><span class="bn">✗ ভুল ছিল</span></button>
+            </div>
+          </div>
+        </div>
+
+        <div id="examSummary" style="display:none;">
+          <div class="exam-card exam-summary">
+            <div><span class="en">Your score</span><span class="bn">তোমার স্কোর</span></div>
+            <div class="big" id="examSummaryScore">0 / 0</div>
+            <div id="examSummaryMsg" style="color:var(--ink-soft); font-size:13.5px; margin-bottom:16px;"></div>
+            <div class="exam-actions">
+              <button class="btn" id="examRetryBtn"><span class="en">Try again</span><span class="bn">আবার চেষ্টা করো</span></button>
+              <button class="btn ghost" id="examBackBtn"><span class="en">Back to setup</span><span class="bn">সেটআপে ফিরে যাও</span></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="appfoot">
+        <span class="en">Based on A Text-Book of Higher English Grammar — Direct &amp; Indirect Narration. For practice and revision.</span>
+        <span class="bn">A Text-Book of Higher English Grammar বই অবলম্বনে — প্রত্যক্ষ ও পরোক্ষ উক্তি। অনুশীলন ও পুনরালোচনার জন্য।</span>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   DATA — Rules
+========================================================= */
+const RULES = [
+{id:"fundamentals", en_title:"1. Fundamentals of Narration", bn_title:"১. উক্তির মূল ধারণা", html_en:`
+  <div class="rule-card">
+    <h3>Direct vs Indirect Speech</h3>
+    <p><b>Direct Speech</b> quotes the exact words spoken by a person, enclosed in quotation marks.</p>
+    <div class="example"><span class="d">Ram says, "Anil will come."</span></div>
+    <p><b>Indirect (Reported) Speech</b> reports only the substance or meaning of what was said, without the exact words.</p>
+    <div class="example"><span class="i">Ram says that Anil will come.</span></div>
+    <ul>
+      <li><b>Reported Speech</b> — the part inside quotation marks in direct speech (e.g. "Anil will come").</li>
+      <li><b>Reporting Verb</b> — the verb introducing the reported speech (e.g. <i>says</i>).</li>
+    </ul>
+  </div>`,
+  html_bn:`
+  <div class="rule-card">
+    <h3 class="bn">প্রত্যক্ষ বনাম পরোক্ষ উক্তি</h3>
+    <p class="bn"><b>প্রত্যক্ষ উক্তি (Direct Speech)</b>-তে বক্তার হুবহু কথাগুলো উদ্ধৃতি চিহ্নের মধ্যে বলা হয়।</p>
+    <div class="example"><span class="d">Ram says, "Anil will come."</span></div>
+    <p class="bn"><b>পরোক্ষ উক্তি (Indirect Speech)</b>-তে বক্তার কথার মূল ভাব প্রকাশ করা হয়, হুবহু শব্দ ব্যবহার না করে।</p>
+    <div class="example"><span class="i">Ram says that Anil will come.</span></div>
+    <ul class="bn">
+      <li><b>Reported Speech</b> — উদ্ধৃতি চিহ্নের মধ্যে থাকা অংশ ("Anil will come")।</li>
+      <li><b>Reporting Verb</b> — যে ক্রিয়াপদ দিয়ে reported speech শুরু হয় (যেমন <i>says</i>)।</li>
+    </ul>
+  </div>`},
+
+{id:"assertive", en_title:"2. Assertive (Statement) Sentences", bn_title:"২. বিবৃতিমূলক বাক্য", html_en:`
+  <div class="rule-card">
+    <h3>Basic rule</h3>
+    <p>The conjunction <b>that</b> is generally used before reported speech in statement-type sentences.</p>
+    <p><b>If the reporting verb is in the present or future tense</b>, the tense of the verb in reported speech does not change.</p>
+    <div class="example"><span class="d">Ram says, "I shall go."</span><span class="arrow">→</span><span class="i">Ram says that he will go.</span></div>
+    <div class="example"><span class="d">He has said, "I went."</span><span class="arrow">→</span><span class="i">He has said that he went.</span></div>
+    <div class="example"><span class="d">You will say, "I am ill."</span><span class="arrow">→</span><span class="i">You will say that you are ill.</span></div>
+  </div>
+  <div class="rule-card">
+    <h3>When the reporting verb is in the past tense</h3>
+    <p>The verb in reported speech changes to its corresponding past form:</p>
+    <table class="rule-table">
+      <tr><th>Direct tense</th><th>Indirect tense</th><th>Example</th></tr>
+      <tr><td>Simple Present</td><td>Simple Past</td><td>"I am ill." → that he was ill.</td></tr>
+      <tr><td>Simple Present</td><td>Simple Past</td><td>"I do it." → that he did it.</td></tr>
+      <tr><td>Present Continuous</td><td>Past Continuous</td><td>"I am doing it." → that he was doing it.</td></tr>
+      <tr><td>Present Perfect</td><td>Past Perfect</td><td>"I have done it." → that he had done it.</td></tr>
+      <tr><td>Simple Past</td><td>Past Perfect</td><td>"I was ill." → that he had been ill. / "I did it." → that he had done it.</td></tr>
+      <tr><td>Past Continuous</td><td>Past Perfect Continuous</td><td>"I was doing it." → that he had been doing it.</td></tr>
+      <tr><td>Can / May</td><td>Could / Might</td><td>"I can do the work." → that he could do the work.</td></tr>
+      <tr><td>Will / Shall</td><td>Would / Should</td><td>"Ram will go." → that Ram would go.</td></tr>
+    </table>
+    <p><b>Future intention</b> — a simple present used as a future form becomes <b>would + verb</b>.</p>
+    <div class="example"><span class="d">He said, "My son leaves for Delhi tomorrow."</span><span class="arrow">→</span><span class="i">He said that his son would leave for Delhi the next day.</span></div>
+  </div>
+  <div class="rule-card">
+    <h3>Exceptions &amp; special notes</h3>
+    <ul>
+      <li><b>Universal truths &amp; habitual facts</b> — tense does not change even if the reporting verb is past.
+        <div class="example"><span class="d">He said, "Honesty is the best policy."</span><span class="arrow">→</span><span class="i">He said that honesty is the best policy.</span></div>
+        <div class="example"><span class="d">He said, "I take bath in the Ganges every morning."</span><span class="arrow">→</span><span class="i">He said that he takes bath in the Ganges every morning.</span></div>
+      </li>
+      <li><b>Pronoun adjustments</b> — 1st person (I, we) changes according to the speaker; 2nd person (you) changes according to the listener.</li>
+      <li><b>Punctuation</b> — inverted commas are removed; the comma after the reporting verb is omitted.</li>
+      <li><b>Style</b> — "said to him / said to me" is usually replaced with <b>told</b> (He told me... instead of He said to me that...).</li>
+    </ul>
+  </div>`,
+  html_bn:`
+  <div class="rule-card">
+    <h3 class="bn">মূল নিয়ম</h3>
+    <p class="bn">বিবৃতিমূলক বাক্যে reported speech-এর আগে সাধারণত <b>that</b> conjunction ব্যবহৃত হয়।</p>
+    <p class="bn"><b>reporting verb present বা future tense-এ থাকলে</b>, reported speech-এর ক্রিয়ার কাল পরিবর্তন হয় না।</p>
+    <div class="example"><span class="d">Ram says, "I shall go."</span><span class="arrow">→</span><span class="i">Ram says that he will go.</span></div>
+  </div>
+  <div class="rule-card">
+    <h3 class="bn">reporting verb past tense-এ থাকলে</h3>
+    <p class="bn">reported speech-এর ক্রিয়া তার সংশ্লিষ্ট past রূপে পরিবর্তিত হয় — Present→Past, Past→Past Perfect, Present Perfect→Past Perfect, Can/May→Could/Might, Will/Shall→Would/Should ইত্যাদি (উপরের টেবিল দেখো)।</p>
+    <p class="bn"><b>ভবিষ্যৎ ইচ্ছা প্রকাশক Simple Present</b> would + verb-এ পরিণত হয়।</p>
+    <div class="example"><span class="d">He said, "My son leaves for Delhi tomorrow."</span><span class="arrow">→</span><span class="i">He said that his son would leave for Delhi the next day.</span></div>
+  </div>
+  <div class="rule-card">
+    <h3 class="bn">ব্যতিক্রম ও বিশেষ নোট</h3>
+    <ul class="bn">
+      <li><b>চিরন্তন সত্য ও অভ্যাসগত কাজ</b> — reporting verb past হলেও কাল পরিবর্তন হয় না।</li>
+      <li><b>সর্বনাম পরিবর্তন</b> — প্রথম পুরুষ (I, we) বক্তা অনুযায়ী; দ্বিতীয় পুরুষ (you) শ্রোতা অনুযায়ী পরিবর্তিত হয়।</li>
+      <li><b>যতিচিহ্ন</b> — উদ্ধৃতি চিহ্ন বাদ যায়; reporting verb-এর পরের কমা বাদ যায়।</li>
+      <li><b>রীতি</b> — "said to him/me" সাধারণত <b>told</b>-এ পরিবর্তিত হয়।</li>
+    </ul>
+  </div>`},
+
+{id:"interrogative", en_title:"3. Interrogative Sentences (Questions)", bn_title:"৩. প্রশ্নবাচক বাক্য", html_en:`
+  <div class="rule-card">
+    <h3>Rules</h3>
+    <ul>
+      <li><b>Reporting verb</b> changes to <b>ask, enquire,</b> or <b>demand</b>.</li>
+      <li><b>Yes/No questions</b> use <b>if</b> or <b>whether</b> as conjunction.</li>
+      <li><b>Wh- questions</b> (who, which, what, why, when, where, how) use no conjunction — the question word itself introduces the clause.</li>
+      <li>The sentence structure converts to assertive order (subject before verb); the question mark is removed.</li>
+    </ul>
+    <div class="example"><span class="d">He said to me, "Are you ill?"</span><span class="arrow">→</span><span class="i">He asked me if I was ill.</span></div>
+    <div class="example"><span class="d">He said to me, "What are you doing?"</span><span class="arrow">→</span><span class="i">He asked me what I was doing.</span></div>
+  </div>
+  <div class="rule-card">
+    <h3>Whether vs If</h3>
+    <ul>
+      <li>Use <b>whether</b> when there is an explicit choice/alternative (or).
+        <div class="example"><span class="i">He asked her whether she wanted to go by train or by car.</span></div>
+      </li>
+      <li>Use <b>whether</b> if the question already contains an "if"-clause, to avoid repeating "if".
+        <div class="example"><span class="i">He asked her whether she would go there if it rained.</span></div>
+      </li>
+    </ul>
+  </div>`,
+  html_bn:`
+  <div class="rule-card">
+    <h3 class="bn">নিয়মাবলী</h3>
+    <ul class="bn">
+      <li><b>reporting verb</b> পরিবর্তিত হয়ে <b>ask, enquire,</b> বা <b>demand</b> হয়।</li>
+      <li><b>হ্যাঁ/না প্রশ্নে</b> conjunction হিসেবে <b>if</b> বা <b>whether</b> ব্যবহৃত হয়।</li>
+      <li><b>Wh- প্রশ্নে</b> (who, what, why...) কোনো conjunction ব্যবহৃত হয় না — প্রশ্নবাচক শব্দটিই clause শুরু করে।</li>
+      <li>বাক্যগঠন সাধারণ বিবৃতির মতো হয় (subject verb-এর আগে); প্রশ্নচিহ্ন বাদ যায়।</li>
+    </ul>
+    <div class="example"><span class="d">He said to me, "Are you ill?"</span><span class="arrow">→</span><span class="i">He asked me if I was ill.</span></div>
+  </div>
+  <div class="rule-card">
+    <h3 class="bn">Whether বনাম If</h3>
+    <ul class="bn">
+      <li>স্পষ্ট বিকল্প (or) থাকলে <b>whether</b> ব্যবহার করো।</li>
+      <li>প্রশ্নে ইতিমধ্যে if-clause থাকলে পুনরাবৃত্তি এড়াতে <b>whether</b> ব্যবহার করো।</li>
+    </ul>
+  </div>`},
+
+{id:"tags", en_title:"4. Question Tags", bn_title:"৪. প্রশ্ন-ট্যাগ", html_en:`
+  <div class="rule-card">
+    <h3>Rule</h3>
+    <p>Sentences with question tags ("isn't he?", "won't they?") are converted using verbs that reflect the speaker's tone — <b>think, hope, believe, expect,</b> or <b>ask</b> — rather than treating the tag as a normal question.</p>
+    <div class="example"><span class="d">Robert said, "John is a good boy, isn't he?"</span><span class="arrow">→</span><span class="i">Robert said that he thought John was a good boy.</span></div>
+    <div class="example"><span class="d">The teacher said to the boy, "You will do the job, won't you?"</span><span class="arrow">→</span><span class="i">The teacher told the boy that he hoped he would do the job.</span></div>
+    <p style="margin-top:10px;">A positive statement + negative tag usually reports as <b>thought</b>; a request-like tag reports as <b>hoped</b>; a negative statement + positive tag often reports as <b>doubted</b>.</p>
+  </div>`,
+  html_bn:`
+  <div class="rule-card">
+    <h3 class="bn">নিয়ম</h3>
+    <p class="bn">প্রশ্ন-ট্যাগযুক্ত বাক্য (isn't he?, won't they?) পরিবর্তনের সময় বক্তার মনোভাব বোঝাতে <b>think, hope, believe, expect,</b> বা <b>ask</b> ব্যবহার করা হয়, ট্যাগটিকে সাধারণ প্রশ্ন হিসেবে না দেখে।</p>
+    <div class="example"><span class="d">Robert said, "John is a good boy, isn't he?"</span><span class="arrow">→</span><span class="i">Robert said that he thought John was a good boy.</span></div>
+    <p class="bn">ইতিবাচক বাক্য + নেতিবাচক ট্যাগ → সাধারণত <b>thought</b>; অনুরোধধর্মী ট্যাগ → <b>hoped</b>; নেতিবাচক বাক্য + ইতিবাচক ট্যাগ → প্রায়ই <b>doubted</b>।</p>
+  </div>`},
+
+{id:"imperative", en_title:'5. Imperative Sentences &amp; "Let"', bn_title:'৫. অনুজ্ঞাসূচক বাক্য ও "Let"', html_en:`
+  <div class="rule-card">
+    <h3>Standard imperatives</h3>
+    <ul>
+      <li>Reporting verb changes to <b>tell, order, command, request, advise, beg, entreat, invite,</b> or <b>warn</b>.</li>
+      <li>The main verb becomes an infinitive: <b>to + verb</b> / <b>not to + verb</b>.</li>
+    </ul>
+    <div class="example"><span class="d">He said to me, "Do not go there."</span><span class="arrow">→</span><span class="i">He advised/ordered me not to go there.</span></div>
+  </div>
+  <div class="rule-card">
+    <h3>Sentences beginning with "Let"</h3>
+    <p><b>Proposal / suggestion</b> — use <b>propose</b> or <b>suggest</b>, and change <b>let</b> to <b>should</b>.</p>
+    <div class="example"><span class="d">He said to me, "Let us go home."</span><span class="arrow">→</span><span class="i">He proposed/suggested that we should go home.</span></div>
+    <p><b>Permission / concession (not a proposal)</b> — change <b>let</b> to <b>might</b> or <b>might be allowed to</b>.</p>
+    <div class="example"><span class="d">He said, "Let him do whatever he likes."</span><span class="arrow">→</span><span class="i">He said that he might (or might be allowed to) do whatever he liked.</span></div>
+  </div>`,
+  html_bn:`
+  <div class="rule-card">
+    <h3 class="bn">সাধারণ অনুজ্ঞাসূচক বাক্য</h3>
+    <ul class="bn">
+      <li>reporting verb পরিবর্তিত হয়ে <b>tell, order, command, request, advise, beg, entreat, invite,</b> বা <b>warn</b> হয়।</li>
+      <li>মূল ক্রিয়া infinitive রূপ নেয়: <b>to + verb</b> / <b>not to + verb</b>।</li>
+    </ul>
+    <div class="example"><span class="d">He said to me, "Do not go there."</span><span class="arrow">→</span><span class="i">He advised/ordered me not to go there.</span></div>
+  </div>
+  <div class="rule-card">
+    <h3 class="bn">"Let" দিয়ে শুরু বাক্য</h3>
+    <p class="bn"><b>প্রস্তাব</b> হলে — <b>propose/suggest</b> ব্যবহার করো, এবং <b>let</b>-কে <b>should</b>-এ পরিবর্তন করো।</p>
+    <p class="bn"><b>অনুমতি/ছাড়</b> হলে — <b>let</b>-কে <b>might</b> বা <b>might be allowed to</b>-তে পরিবর্তন করো।</p>
+  </div>`},
+
+{id:"modals", en_title:"6. Modal Verbs", bn_title:"৬. মোডাল ক্রিয়া", html_en:`
+  <div class="rule-card">
+    <h3>Rule</h3>
+    <p>Modal verbs like <b>would, should, might, could,</b> and <b>must</b> generally do not change form in indirect speech, even after a past-tense reporting verb.</p>
+    <div class="example"><span class="d">He said, "I must leave the place."</span><span class="arrow">→</span><span class="i">He told that he must leave the place.</span></div>
+    <div class="example"><span class="d">The man said, "Could I speak to Mr. Ray?"</span><span class="arrow">→</span><span class="i">The man asked if he could speak to Mr. Ray.</span></div>
+  </div>`,
+  html_bn:`
+  <div class="rule-card">
+    <h3 class="bn">নিয়ম</h3>
+    <p class="bn"><b>would, should, might, could, must</b>-এর মতো মোডাল ক্রিয়া reporting verb past হলেও সাধারণত রূপ পরিবর্তন করে না।</p>
+    <div class="example"><span class="d">He said, "I must leave the place."</span><span class="arrow">→</span><span class="i">He told that he must leave the place.</span></div>
+  </div>`},
+
+{id:"optative", en_title:"7. Optative &amp; Exclamatory Sentences", bn_title:"৭. ইচ্ছাসূচক ও বিস্ময়সূচক বাক্য", html_en:`
+  <div class="rule-card">
+    <h3>Optative sentences (wishes / prayers)</h3>
+    <p>Reporting verb changes to <b>wish</b> or <b>pray</b>; the sentence converts to assertive structure.</p>
+    <div class="example"><span class="d">He said to me, "May you be happy."</span><span class="arrow">→</span><span class="i">He wished/prayed that I might be happy.</span></div>
+  </div>
+  <div class="rule-card">
+    <h3>Exclamatory sentences</h3>
+    <p>Reporting verb changes to <b>exclaim, cry out,</b> or similar, converting the emotion into a plain statement.</p>
+    <ul>
+      <li>What/how/who used to express excess or absence (not a real question) are replaced by <b>great, greatly, very, very much,</b> or <b>none</b> in indirect speech.</li>
+      <li>The indirect sentence ends with a full stop, not an exclamation mark.</li>
+    </ul>
+    <div class="example"><span class="d">He said, "How charming the sight is!"</span><span class="arrow">→</span><span class="i">He exclaimed that the sight was very charming.</span></div>
+  </div>`,
+  html_bn:`
+  <div class="rule-card">
+    <h3 class="bn">ইচ্ছাসূচক বাক্য (আশীর্বাদ/প্রার্থনা)</h3>
+    <p class="bn">reporting verb পরিবর্তিত হয়ে <b>wish</b> বা <b>pray</b> হয়; বাক্যটি সাধারণ বিবৃতির গঠনে রূপান্তরিত হয়।</p>
+    <div class="example"><span class="d">He said to me, "May you be happy."</span><span class="arrow">→</span><span class="i">He wished/prayed that I might be happy.</span></div>
+  </div>
+  <div class="rule-card">
+    <h3 class="bn">বিস্ময়সূচক বাক্য</h3>
+    <p class="bn">reporting verb পরিবর্তিত হয়ে <b>exclaim, cry out</b> ইত্যাদি হয়; আবেগকে সাধারণ বিবৃতিতে রূপান্তর করা হয়।</p>
+    <ul class="bn">
+      <li>what/how/who আধিক্য বা অভাব বোঝাতে ব্যবহৃত হলে indirect-এ <b>great, greatly, very, very much,</b> বা <b>none</b> দিয়ে প্রতিস্থাপিত হয়।</li>
+      <li>indirect বাক্য পূর্ণচ্ছেদ (.) দিয়ে শেষ হয়, বিস্ময়চিহ্ন (!) দিয়ে নয়।</li>
+    </ul>
+  </div>`},
+
+{id:"timeplace", en_title:"8. Words of Time &amp; Place", bn_title:"৮. কাল ও স্থানসূচক শব্দ", html_en:`
+  <div class="rule-card">
+    <h3>Rule</h3>
+    <p>Adjectives, adverbs and verbs expressing <b>nearness</b> are usually changed to words expressing <b>remoteness</b> — unless they still refer to something present at the time of reporting.</p>
+    <table class="rule-table">
+      <tr><th>Direct</th><th>Indirect</th></tr>
+      <tr><td>now</td><td>then</td></tr>
+      <tr><td>here</td><td>there</td></tr>
+      <tr><td>this / these</td><td>that / those</td></tr>
+      <tr><td>today</td><td>that day</td></tr>
+      <tr><td>tomorrow</td><td>the next day / the following day</td></tr>
+      <tr><td>yesterday</td><td>the day before / the previous day</td></tr>
+      <tr><td>ago</td><td>before</td></tr>
+      <tr><td>come</td><td>go (usually, when direction changes)</td></tr>
+    </table>
+    <p style="margin-top:10px;">⚠️ <b>Common mistake:</b> "it" is <b>never</b> changed to "that" in indirect speech — it stays "it".</p>
+  </div>`,
+  html_bn:`
+  <div class="rule-card">
+    <h3 class="bn">নিয়ম</h3>
+    <p class="bn">নৈকট্য বোঝানো শব্দ (now, here, this, today...) সাধারণত দূরত্ব বোঝানো শব্দে পরিবর্তিত হয় ( then, there, that, that day...) — যদি না সেগুলো reporting-এর সময়েও উপস্থিত কোনো বিষয় নির্দেশ করে।</p>
+    <p class="bn">⚠️ <b>সাধারণ ভুল:</b> "it"-কে "that"-এ পরিবর্তন করা <b>ভুল</b> — "it" অপরিবর্তিত থাকে।</p>
+  </div>`},
+
+{id:"misc", en_title:"9. Questions/Answers, Dialogues &amp; Summaries", bn_title:"৯. প্রশ্নোত্তর, কথোপকথন ও সারাংশ", html_en:`
+  <div class="rule-card">
+    <h3>Yes / No answers</h3>
+    <p>When changing short answers like "Yes"/"No" into indirect speech, supply the words that are understood — don't leave the sentence incomplete. The force of Yes/No can also be shown through the main verb (e.g. <i>replied that he had</i>, instead of "replied in the affirmative").</p>
+  </div>
+  <div class="rule-card">
+    <h3>Miscellaneous</h3>
+    <p>Comment clauses like <i>you see, as you know, to tell you frankly</i>, and filler words like <i>well, very well, okay, now, so</i> used only to introduce a sentence are usually dropped in indirect speech.</p>
+  </div>
+  <div class="rule-card">
+    <h3>Combining different kinds of reported sentences</h3>
+    <ul>
+      <li>When sentences of the <b>same kind</b> occur consecutively, the reporting verb is used only <b>once</b>.</li>
+      <li>When they are <b>not consecutive</b>, the verb is repeated — often with <b>again</b> or <b>also</b>.</li>
+      <li>When sentences of <b>different kinds</b> are joined, use the appropriate different reporting verbs for each.</li>
+      <li>The whole introductory phrase ("he said that") can be dropped for an assertive sentence that doesn't begin the speech; a connector like <b>so</b> can link the ideas instead.</li>
+    </ul>
+    <div class="example"><span class="d">He said to me, "Who are you? What do you want? Go away."</span><span class="arrow">→</span><span class="i">He asked me who I was and what I wanted, and told me to go away.</span></div>
+  </div>
+  <div class="rule-card">
+    <h3>Reporting dialogues &amp; conversations</h3>
+    <ul>
+      <li>A conversation can be reported by the <b>speaker</b>, the <b>listener</b>, or a <b>third person</b> — pronouns change accordingly each time. Use common sense to track who "I", "you" and "he/she" become.</li>
+      <li>Not every line needs to be reported in real conversation — focus on the message, not word-for-word conversion (though in exams, convert every sentence unless told to summarise).</li>
+      <li>Avoid mechanical habits — don't force "it" → "that", and don't over-use clichés like "addressing his friend by name".</li>
+    </ul>
+  </div>
+  <div class="rule-card">
+    <h3>Summarising a dialogue</h3>
+    <p>State the main points in a few words — leave out details or examples unless necessary to understand the summary. Keep the language simple, smooth, and readable rather than "structurally perfect".</p>
+  </div>`,
+  html_bn:`
+  <div class="rule-card">
+    <h3 class="bn">হ্যাঁ/না উত্তর</h3>
+    <p class="bn">সংক্ষিপ্ত উত্তর ("Yes"/"No") পরোক্ষ উক্তিতে রূপান্তর করার সময় অনুক্ত অংশ পূরণ করে দিতে হয় — বাক্য অসম্পূর্ণ রাখা যাবে না।</p>
+  </div>
+  <div class="rule-card">
+    <h3 class="bn">বিবিধ</h3>
+    <p class="bn">you see, as you know, well, okay, now, so ইত্যাদি ভূমিকাসূচক শব্দ/বাক্যাংশ সাধারণত পরোক্ষ উক্তিতে বাদ দেওয়া হয়।</p>
+  </div>
+  <div class="rule-card">
+    <h3 class="bn">একাধিক ধরনের বাক্য একত্রীকরণ</h3>
+    <ul class="bn">
+      <li>একই ধরনের বাক্য পরপর থাকলে reporting verb শুধু <b>একবার</b> ব্যবহৃত হয়।</li>
+      <li>পরপর না থাকলে verb পুনরাবৃত্তি হয় — often again/also সহ।</li>
+      <li>ভিন্ন ধরনের বাক্য যুক্ত হলে প্রতিটির জন্য উপযুক্ত পৃথক reporting verb ব্যবহার করো।</li>
+    </ul>
+  </div>
+  <div class="rule-card">
+    <h3 class="bn">কথোপকথন রিপোর্ট করা</h3>
+    <ul class="bn">
+      <li>কথোপকথন বক্তা, শ্রোতা, বা তৃতীয় ব্যক্তি — যে কেউ রিপোর্ট করতে পারে; প্রতিবার সর্বনাম বদলাতে হয়।</li>
+      <li>বাস্তব জীবনে প্রতিটি লাইন হুবহু রিপোর্ট করার দরকার নেই — মূল বার্তার উপর গুরুত্ব দাও।</li>
+    </ul>
+  </div>
+  <div class="rule-card">
+    <h3 class="bn">কথোপকথনের সারাংশ</h3>
+    <p class="bn">মূল বিষয়গুলো সংক্ষেপে বলো — অপ্রয়োজনীয় বিস্তারিত বাদ দাও। ভাষা সহজ, স্বাভাবিক ও পাঠযোগ্য রাখো।</p>
+  </div>`}
+];
+
+/* =========================================================
+   DATA — Question Bank (exercises 45–51)
+   type: A=Assertive, Q=Interrogative, T=QuestionTag, I=Imperative/Let,
+         M=Modal, O=Optative/Exclamatory, TP=Time/Place, D=Dialogue/Summary
+   dir: "toIndirect" or "toDirect"
+========================================================= */
+const BANK = [];
+let _id = 1;
+function add(ex, type, dir, q, a){ BANK.push({id:_id++, ex, type, dir, q, a}); }
+
+/* Exercise 45(a) — to indirect */
+add("45(a)","A","toIndirect",`He said to me, "You are wicked; so I shall not play with you."`,`He told me that I was wicked, so he would not play with me.`);
+add("45(a)","A","toIndirect",`You said to him, "I am ill; so I cannot come to your place."`,`You told him that you were ill, so you could not come to his place.`);
+add("45(a)","A","toIndirect",`He said to you, "I was much struck by your eloquence."`,`He told you that he had been much struck by your eloquence.`);
+add("45(a)","A","toIndirect",`We remarked, "God is gracious."`,`We remarked that God is gracious. (universal truth — tense unchanged)`);
+add("45(a)","A","toIndirect",`I said to my mother, "I shall always obey you."`,`I told my mother that I would always obey her.`);
+add("45(a)","A","toIndirect",`They said to me, "We have been your friends all through."`,`They told me that they had been my friends all through.`);
+add("45(a)","A","toIndirect",`She said to me, "You may rely on me for support."`,`She told me that I might rely on her for support.`);
+add("45(a)","A","toIndirect",`He said to Gopal, "You were a mere boy when I saw you last."`,`He told Gopal that he had been a mere boy when he had seen him last.`);
+add("45(a)","A","toIndirect",`I said to him, "The sky is blue."`,`I told him that the sky is blue. (universal truth)`);
+add("45(a)","A","toIndirect",`"He has done the work."`,`He said that he had done the work.`);
+add("45(a)","A","toIndirect",`"You will feel the consequences."`,`He said that I would feel the consequences.`);
+add("45(a)","A","toIndirect",`"I am not angry with you."`,`He said that he was not angry with me.`);
+add("45(a)","A","toIndirect",`I said to them, "You have done wrong."`,`I told them that they had done wrong.`);
+
+/* Exercise 45(b) — to direct */
+add("45(b)","A","toDirect",`He said that he was sorry.`,`He said, "I am sorry."`);
+add("45(b)","A","toDirect",`I told him that I had once seen him before.`,`I said to him, "I once saw you before."`);
+add("45(b)","A","toDirect",`You told me that as you did not know me, you could not help me.`,`You said to me, "As I do not know you, I cannot help you."`);
+add("45(b)","A","toDirect",`The boy said that he would go.`,`The boy said, "I shall go."`);
+add("45(b)","A","toDirect",`The girl told her father that she would be glad if he would put her into a good school.`,`The girl said to her father, "I shall be glad if you will put me into a good school."`);
+add("45(b)","A","toDirect",`They told Ram that he had done wrong and must apologise to them.`,`They said to Ram, "You have done wrong and must apologise to us."`);
+
+/* Exercise 46(a) — interrogative to indirect */
+add("46(a)","Q","toIndirect",`I said to him, "When will you do it?"`,`I asked him when he would do it.`);
+add("46(a)","Q","toIndirect",`He said to me, "Do you like the work?"`,`He asked me if I liked the work.`);
+add("46(a)","Q","toIndirect",`They said to her, "Who are you and what do you want of us?"`,`They asked her who she was and what she wanted of them.`);
+add("46(a)","Q","toIndirect",`You said to them, "Have you seen the man who came to me the other day?"`,`You asked them if they had seen the man who had come to you the other day.`);
+add("46(a)","Q","toIndirect",`I said to him, "When did you see me and what do you think of me?"`,`I asked him when he had seen me and what he thought of me.`);
+add("46(a)","Q","toIndirect",`He said to me, "Is there no hope for me?"`,`He asked me if there was no hope for him.`);
+add("46(a)","Q","toIndirect",`I said to him, "Will you go to Calcutta?"`,`I asked him if he would go to Calcutta.`);
+add("46(a)","Q","toIndirect",`She said to me, "Did you write to me before?"`,`She asked me if I had written to her before.`);
+add("46(a)","Q","toIndirect",`He said to her, "When did you come to my place?"`,`He asked her when she had come to his place.`);
+
+/* Exercise 46(b) — to direct */
+add("46(b)","Q","toDirect",`She enquired when I would be able to help her.`,`She said to me, "When will you be able to help me?"`);
+add("46(b)","Q","toDirect",`They asked the boy why he had failed in the examination.`,`They said to the boy, "Why did you fail in the examination?"`);
+add("46(b)","Q","toDirect",`The boy asked his mother what she was sorry for.`,`The boy said to his mother, "What are you sorry for?"`);
+add("46(b)","Q","toDirect",`They enquired of me who I was and why I was opposing them.`,`They said to me, "Who are you and why are you opposing us?"`);
+add("46(b)","Q","toDirect",`I asked him if he would compete for the medal with my brother.`,`I said to him, "Will you compete for the medal with my brother?"`);
+add("46(b)","Q","toDirect",`He asked me how I did the work.`,`He said to me, "How did you do the work?"`);
+
+/* Exercise 47 — question tags */
+add("47","T","toIndirect",`He said to me, "They will never come, will they?"`,`He doubted if they would ever come.`);
+add("47","T","toIndirect",`She said to me, "You can speak German, can't you?"`,`She said that she thought I could speak German.`);
+add("47","T","toIndirect",`He said to me, "You can't speak French, can you?"`,`He doubted if I could speak French.`);
+add("47","T","toIndirect",`I said, "Everybody will go there, won't they?"`,`I said that I thought everybody would go there.`);
+add("47","T","toIndirect",`He said, "Your son lives in Delhi, doesn't he?"`,`He said that he thought my son lived in Delhi.`);
+add("47","T","toIndirect",`The teacher said to him, "Amal has done well in the examination, hasn't he?"`,`The teacher said that he thought Amal had done well in the examination.`);
+add("47","T","toIndirect",`He said to me, "You aren't angry, are you?"`,`He hoped that I was not angry.`);
+add("47","T","toIndirect",`Raman said, "The rain will stop soon, won't it?"`,`Raman said that he hoped the rain would stop soon.`);
+add("47","T","toIndirect",`He said, "Rina is very fond of sweets, isn't she?"`,`He said that he thought Rina was very fond of sweets.`);
+add("47","T","toIndirect",`Partha said to me, "You will come to Kolkata, won't you?"`,`Partha said that he hoped I would come to Kolkata.`);
+add("47","T","toIndirect",`Sita said to Asha, "You haven't any house, have you?"`,`Sita said that she thought Asha had no house.`);
+add("47","T","toIndirect",`I said to Ram, "You did not sing in the function, did you?"`,`I said that I thought Ram had not sung in the function.`);
+
+/* Exercise 48(a) Set I — imperatives */
+add("48(a)-I","I","toIndirect",`"Come here."`,`He told me to go there.`);
+add("48(a)-I","I","toIndirect",`"Please give me a book."`,`He requested me to give him a book.`);
+add("48(a)-I","I","toIndirect",`He said to us, "Do not vex me."`,`He told us not to vex him.`);
+add("48(a)-I","I","toIndirect",`I said to her, "Go to school, or you will be fined."`,`I told her to go to school, or she would be fined.`);
+add("48(a)-I","I","toIndirect",`They said to me, "Ram, tell your brother to see us."`,`They told Ram to tell his brother to see them.`);
+add("48(a)-I","I","toIndirect",`The Headmaster said to the boys, "Do not make any noise."`,`The Headmaster told the boys not to make any noise.`);
+add("48(a)-I","I","toIndirect",`She said to me, "Let me have it."`,`She requested me to let her have it.`);
+add("48(a)-I","I","toIndirect",`She said to him, "Father, kindly excuse me this time."`,`Addressing him as Father, she requested him to excuse her that time.`);
+add("48(a)-I","I","toIndirect",`"Go there at once."`,`He ordered him to go there at once.`);
+add("48(a)-I","I","toIndirect",`The boy said, "Sir, please grant me leave of absence."`,`Addressing him as Sir, the boy requested him to grant him leave of absence.`);
+add("48(a)-I","I","toIndirect",`He said to me, "Let me try."`,`He requested me to let him try.`);
+add("48(a)-I","I","toIndirect",`"Give him a book."`,`He told me to give him a book.`);
+add("48(a)-I","I","toIndirect",`The President said to the members, "Please obey the chair."`,`The President requested the members to obey the chair.`);
+
+/* Exercise 48(a) Set II — modals */
+add("48(a)-II","M","toIndirect",`He said, "They would come tomorrow."`,`He said that they would come the next day.`);
+add("48(a)-II","M","toIndirect",`She said to me, "You should not go out at night."`,`She told me that I should not go out at night.`);
+add("48(a)-II","M","toIndirect",`The servant said, "I could not open the door."`,`The servant said that he could not open the door.`);
+add("48(a)-II","M","toIndirect",`"You must not neglect your study," said the teacher to the students.`,`The teacher told the students that they must not neglect their study.`);
+add("48(a)-II","M","toIndirect",`They said, "We might win the match."`,`They said that they might win the match.`);
+add("48(a)-II","M","toIndirect",`"Could you tell me where he lives?"`,`He asked if I could tell him where he lived.`);
+add("48(a)-II","M","toIndirect",`Mother said, "You must work hard."`,`Mother told me that I must work hard.`);
+add("48(a)-II","M","toIndirect",`He said, "I would certainly help him."`,`He said that he would certainly help him.`);
+add("48(a)-II","M","toIndirect",`"Would you mind giving me the book?" I said to the man.`,`I asked the man if he would mind giving me the book.`);
+add("48(a)-II","M","toIndirect",`"I must go to the doctor," he said.`,`He said that he must go to the doctor.`);
+
+/* Exercise 48(b) Set I — to direct */
+add("48(b)-I","I","toDirect",`He told me to go home.`,`He said to me, "Go home."`);
+add("48(b)-I","I","toDirect",`I requested him to lend me a pen.`,`I said to him, "Please lend me a pen."`);
+add("48(b)-I","I","toDirect",`The beggar entreated me to give him a rupee.`,`The beggar said to me, "Please give me a rupee."`);
+add("48(b)-I","I","toDirect",`The father ordered the boy not to mix with such friends.`,`The father said to the boy, "Do not mix with such friends."`);
+add("48(b)-I","I","toDirect",`I requested them to speak to their headmaster about my prayer.`,`I said to them, "Please speak to your headmaster about my prayer."`);
+add("48(b)-I","I","toDirect",`He proposed that we should go out for a walk.`,`He said, "Let us go out for a walk."`);
+add("48(b)-I","I","toDirect",`The girl begged her father to allow her to go.`,`The girl said to her father, "Please allow me to go."`);
+
+/* Exercise 48(b) Set II — to direct */
+add("48(b)-II","M","toDirect",`He asked if he could use my telephone.`,`He said, "Could I use your telephone?"`);
+add("48(b)-II","M","toDirect",`The police told us that we should not go to the park at night.`,`The police said to us, "You should not go to the park at night."`);
+add("48(b)-II","M","toDirect",`You told me that you could do the job if I liked.`,`You said to me, "I could do the job if you like."`);
+add("48(b)-II","M","toDirect",`He told me that he must tell me about the incident.`,`He said to me, "I must tell you about the incident."`);
+add("48(b)-II","M","toDirect",`You said that you might see him at the meeting.`,`You said, "I might see him at the meeting."`);
+add("48(b)-II","M","toDirect",`She said that she would like to take classes.`,`She said, "I would like to take classes."`);
+add("48(b)-II","M","toDirect",`I said that they must be wrong.`,`I said, "They must be wrong."`);
+add("48(b)-II","M","toDirect",`He said that nobody should disturb him.`,`He said, "Nobody should disturb me."`);
+
+/* Exercise 49 — optative/exclamatory */
+add("49","O","toIndirect",`I said to her, "May you live long."`,`I wished/prayed that she might live long.`);
+add("49","O","toIndirect",`He said to us, "May you all succeed."`,`He wished/prayed that we might all succeed.`);
+add("49","O","toIndirect",`He said, "Well done!"`,`He exclaimed that it was well done.`);
+add("49","O","toIndirect",`You said, "Good morning, my friend. I am glad to meet you."`,`You greeted your friend and said that you were glad to meet him.`);
+add("49","O","toIndirect",`You said, "By God! I never meant you any harm."`,`You exclaimed solemnly that you had never meant me any harm.`);
+add("49","O","toIndirect",`He said, "How charming the sight is!"`,`He exclaimed that the sight was very charming.`);
+add("49","O","toIndirect",`You said to me, "How clever your action was!"`,`You exclaimed that my action had been very clever.`);
+add("49","O","toIndirect",`I said to him, "What a nice fellow your brother is!"`,`I exclaimed that his brother was a very nice fellow.`);
+add("49","O","toIndirect",`You said, "Who does not wish to be happy?"`,`You exclaimed that everybody wishes to be happy.`);
+add("49","O","toIndirect",`You said, "Had I the means to do it!"`,`You wished that you had the means to do it.`);
+add("49","O","toIndirect",`He said, "My God! I am undone."`,`He exclaimed sadly that he was undone.`);
+add("49","O","toIndirect",`They said, "How cruel of him!"`,`They exclaimed that it was very cruel of him.`);
+add("49","O","toIndirect",`He said, "Ah me! what a mistake it was!"`,`He exclaimed sorrowfully that it was a great mistake.`);
+
+/* Exercise 50(a) — time/place */
+add("50(a)","TP","toIndirect",`I said to him, "I may go tomorrow."`,`I told him that I might go the next day.`);
+add("50(a)","TP","toIndirect",`He said to me, "Come again any time today."`,`He told me to go there again any time that day.`);
+add("50(a)","TP","toIndirect",`He said to you, "I cannot attend to you now."`,`He told you that he could not attend to you then.`);
+add("50(a)","TP","toIndirect",`He said to me, "Go hence."`,`He told me to go thence (from there).`);
+add("50(a)","TP","toIndirect",`You said to me, "I was well yesterday, but today I am rather sick."`,`You told me that you had been well the day before, but that day you were rather sick.`);
+add("50(a)","TP","toIndirect",`He said to me, "Why do you treat me thus?"`,`He asked me why I treated him that way.`);
+add("50(a)","TP","toIndirect",`I said to them, "We cannot be quite happy here."`,`I told them that we could not be quite happy there.`);
+add("50(a)","TP","toIndirect",`She said, "I have no hope here on earth."`,`She said that she had no hope there on earth.`);
+add("50(a)","TP","toIndirect",`She said, "I saw these boys yesterday."`,`She said that she had seen those boys the day before.`);
+
+/* Exercise 50(b) — to direct */
+add("50(b)","TP","toDirect",`He told me that he had seen me the previous day.`,`He said to me, "I saw you yesterday."`);
+add("50(b)","TP","toDirect",`You said that it was wrong to act in that way.`,`You said, "It is wrong to act in this way."`);
+add("50(b)","TP","toDirect",`I hoped that you would go to Calcutta the next day.`,`I said, "I hope you will go to Calcutta tomorrow."`);
+add("50(b)","TP","toDirect",`The boy said that he had no sleep the previous night.`,`The boy said, "I had no sleep last night."`);
+add("50(b)","TP","toDirect",`I said that I could not finish that work till the next day.`,`I said, "I cannot finish this work till tomorrow."`);
+add("50(b)","TP","toDirect",`I said that I should go away that day.`,`I said, "I shall go away today."`);
+
+/* Exercise 51(a) — mixed, longer passages (model answers as given) */
+add("51(a)","D","toIndirect",`He said to me, "When will you go home? I shall send my son with you."`,`He asked me when I would go home and added that he would send his son with me.`);
+add("51(a)","D","toIndirect",`The boy said to the teacher, "Please excuse me, sir. I shall never do so again."`,`The boy respectfully begged the teacher to excuse him and promised that he would never do so again.`);
+add("51(a)","D","toIndirect",`He said to the boys, "Let us start at once, otherwise we may miss the train."`,`He proposed to the boys that they should start at once, otherwise they might miss the train.`);
+add("51(a)","D","toIndirect",`She said to them, "Can't you remain silent for some time? Just let me finish, and then decide what you are to do."`,`She asked them if they could not remain silent for some time and requested them to let her finish first, and then decide what they were to do.`);
+add("51(a)","D","toIndirect",`"I am old and lonely," said she. "Have you no pity for my loneliness? Stay with me my son, for some time more."`,`She said that she was old and lonely and asked if he had no pity for her loneliness, entreating her son to stay with her for some time more.`);
+add("51(a)","D","toIndirect",`"Boys", said he, "come in and sit on the benches here. I have something very interesting to tell you."`,`Addressing the boys, he told them to come in and sit on the benches there, as he had something very interesting to tell them.`);
+add("51(a)","D","toIndirect",`"Has he failed?" said Jatin. "Yes, bad luck," replied Samar. "Who ever dreamed of it!"`,`Jatin asked if he had failed. Samar replied in the affirmative with regret, saying it was bad luck, and exclaimed that nobody had ever dreamed of it.`);
+add("51(a)","D","toIndirect",`"The ruby has fallen out of his sword, his eyes are gone and he is golden no longer," said the Mayor; "in fact, he is little better than a beggar!" "Little better than a beggar," said the Town Councillors.`,`The Mayor remarked that the ruby had fallen out of his sword, his eyes were gone, and he was golden no longer, adding that in fact he was little better than a beggar. The Town Councillors agreed, repeating that he was little better than a beggar.`);
+add("51(a)","D","toIndirect",`"I am glad that you are going to Egypt at last, little Swallow," said the Prince, "you have stayed too long here; but you must kiss me on the lips." "It is not to Egypt that I am going," said the Swallow, "I am going to the House of Death. Death is the brother of Sleep."`,`The Prince told the little Swallow that he was glad it was going to Egypt at last, as it had stayed there too long, but requested it to kiss him on the lips. The Swallow replied that it was not going to Egypt but to the House of Death, adding that Death was the brother of Sleep.`);
+add("51(a)","D","toIndirect",`"Go back in peace, my son," said Minos. "It is a pity that one so brave should die." Theseus said, "I have sworn that I will not go back till I have seen the monster face to face." At that Minos frowned and said, "Then thou shalt see him; take the mad man away."`,`Addressing him as his son, Minos told him to go back in peace and expressed regret that one so brave should die. Theseus asserted that he had sworn he would not go back until he had seen the monster face to face. At that, Minos frowned and declared that he should then see him, ordering his men to take the mad man away.`);
+add("51(a)","D","toIndirect",`Teacher — "Well, Kanti, what's the matter with you? You look so sad." Kanti — "My sister is ill, sir. The doctor says it is a bad case." Teacher — "Sorry to hear this. What's the disease?" Kanti — "It is a case of typhoid, sir."`,`The teacher asked Kanti what the matter was with him and observed that he looked very sad. Kanti respectfully replied that his sister was ill and that the doctor said it was a bad case. The teacher expressed sorrow upon hearing this and inquired about the disease. Kanti respectfully informed him that it was a case of typhoid.`);
+add("51(a)","D","toIndirect",`Perseus replied, "Indeed, O king, I think there is no task from which I would shrink in fear." "If I thought that, my boy," said the King, "I would let you undertake a task that I am saving for the bravest man in my kingdom."`,`Addressing the king, Perseus replied that he indeed thought there was no task from which he would shrink in fear. The King responded that if he thought so, he would let the boy undertake a task he was saving for the bravest man in his kingdom.`);
+add("51(a)","D","toIndirect",`"Ah, those days are past," sighed the King, "such heroes do not live in our times." "You are wrong!" cried Jason, "there are many heroes waiting only for the chance to do great deeds." The King laughed aloud and said, "Is it possible that you have never heard the story of the Golden Fleece? Long years have I been waiting for a hero to bring it higher."`,`The King sighed that those days were past and that such heroes did not live in their times. Jason exclaimed firmly that he was wrong, adding that there were many heroes waiting only for the chance to do great deeds. Laughing aloud, the King asked if it was possible that he had never heard the story of the Golden Fleece, and mentioned that he had been waiting for long years for a hero to bring it higher.`);
+add("51(a)","D","toIndirect",`"Oh beautiful lady," said the fisherman, "why have you come to this island in such a strange ship? Who are you, and where do you come from? You look like a king's daughter." Instead of answering, Dance said, "Tell me what country I have come to, and what sort of people live here. I am very unhappy."`,`Addressing her as a beautiful lady, the fisherman asked why she had come to that island in such a strange ship, who she was, and where she came from, adding that she looked like a king's daughter. Instead of answering, Dance requested him to tell her what country she had come to and what sort of people lived there, lamenting that she was very unhappy.`);
+add("51(a)","D","toIndirect",`Dance knelt down and cried, "Oh sir, have pity upon me, and let me live in your house as a servant. I am a king's daughter and this boy's father is a god." Dictys raised her up and said, "My daughter, I am old, and I have no children. Come with me, then, and you shall be a daughter to me."`,`Dance knelt down before him and pleaded with him to have pity upon her and let her live in his house as a servant, adding that she was a king's daughter and the boy's father was a god. Dictys raised her up and addressed her as his daughter, saying that he was old and had no children, and invited her to come with him, assuring her that she would be a daughter to him.`);
+add("51(a)","D","toIndirect",`Sergeant: "Stop! Didn't I tell you to stop? You can't go on there." Man: "Oh, very well. It's a hard thing to be poor." Sergeant: "Who are you?" Man: "I'm one Jimmy Walsh, a ballad-singer."`,`The Sergeant ordered the man to stop, asking if he had not told him to stop and stating that he could not go on there. The man conceded with a sigh that it was a hard thing to be poor. When the Sergeant asked who he was, the man disclosed that he was one Jimmy Walsh, a ballad-singer.`);
+add("51(a)","D","toIndirect",`"What's your name, my good woman?" asked he. "Judith Gardenier." "And your father's name?" "Ah, poor man, Rip Van Winkle was his name; but it's twenty years since he went away from home, and never has been heard of since."`,`He politely asked the woman her name, to which she replied that it was Judith Gardenier. He then asked her father's name. She replied mournfully that her poor father's name was Rip Van Winkle, but added that it had been twenty years since he went away from home and had never been heard of since.`);
+add("51(a)","D","toIndirect",`He said, "Sir, I did not beg of you. We have good land... but this year the river rose... we have no seed left. I told them, we cannot eat the seed. But they were young and hungry and they ate it."`,`He respectfully stated that he had not begged of him. He explained that they had good land but that year the river had risen, and that they had no seed left, as they had eaten it. He mentioned that he had told them not to eat the seed, but they were young and hungry, so they had eaten it.`);
+add("51(a)","D","toIndirect",`"What is the sum?" said Robin Hood. "Sir," he said, "it is four hundred pounds; the abbot lent it to me." "If you lose your land," said Robin Hood, "what will become of you?"`,`Robin Hood asked what the sum was. He respectfully answered that it was four hundred pounds, which the abbot had lent to him. Robin Hood then asked what would become of him if he lost his land.`);
+add("51(a)","D","toIndirect",`"Is not the young prince of Athens standing among you?" said the king. "I am he, your Majesty," answered Theseus proudly, "let my companions sleep in the courtyard tonight, and let me enter the labyrinth alone."`,`The king asked if the young prince of Athens was not standing among them. Theseus proudly answered that he was the prince, and requested that his companions be allowed to sleep in the courtyard that night, and that he be allowed to enter the labyrinth alone.`);
+add("51(a)","D","toIndirect",`"Prince Theseus," said Ariadne, "my heart grieves for you. You are brave and strong. Why should you not slay the monster and escape tonight?" "Fair Princess," answered Theseus, "my arm is strong enough to slay any creature; but even if I kill the Minotaur, I can never find my way back out of the labyrinth."`,`Ariadne told Prince Theseus that her heart grieved for him, adding that he was brave and strong, and asking why he should not slay the monster and escape that night. Addressing her as Fair Princess, Theseus replied that his arm was strong enough to slay any creature, but explained that even if he killed the Minotaur, he could never find his way back out of the labyrinth.`);
+add("51(a)","D","toIndirect",`"My daughter," she said, "listen to the advice of an old woman. Be content to reign as queen of your art among women, but do not compare yourself with the gods. Ask pardon for the foolish words you have just spoken."`,`Addressing her as her daughter, she advised Ariadne to listen to the advice of an old woman, urging her to be content to reign as queen of her art among women, but not to compare herself with the gods, and to ask pardon for the foolish words she had just spoken.`);
+add("51(a)","D","toIndirect",`"See Sancho," said Don Quixote, "see those thirty huge giants!" "What giants?" asked Sancho. "O Sir," said Sancho, "those are not giants but windmills. Their arms are nothing but the sails."`,`Don Quixote told Sancho to look at those thirty huge giants. Sancho asked what giants he meant. Sancho respectfully pointed out that those were not giants but windmills, and explained that their arms were nothing but the sails.`);
+add("51(a)","D","toIndirect",`Judge: "You are a witness for the prisoner?" Witness: "I am, my lord. I have walked twenty miles to speak the truth of him." "How long have you known that prisoner?" "As long as I have known anything. We were playmates together."`,`The Judge asked the witness if he was a witness for the prisoner. The witness respectfully replied in the affirmative, adding that he had walked twenty miles to speak the truth about him. The Judge then inquired how long he had known the prisoner. He answered that he had known him as long as he had known anything, and that they had been playmates together.`);
+add("51(a)","D","toIndirect",`"Aha, Perseus!" cried the King, "so you have come back without doing what you promised." "Nay, your majesty," answered Perseus, "I have slain Medusa, and have brought you her head."`,`The King exclaimed at Perseus, remarking that he had come back without doing what he had promised to do. Respectfully disagreeing, Perseus replied that he had slain Medusa and had brought him her head.`);
+add("51(a)","D","toIndirect",`Columbus: "They drink too much." Pedro: "They are simple men and must have their relaxation. We have not all your vision, captain."`,`Columbus observed that they drank too much. Pedro explained that they were simple men and had to have their relaxation, adding that they did not all have his vision, captain.`);
+add("51(a)","D","toIndirect",`"Who are you?" said the Swallow. "I am the Happy Prince." "Why are you weeping then?" asked the Swallow; "you have quite drenched me."`,`The Swallow asked who he was. He replied that he was the Happy Prince. The Swallow then asked why he was weeping, noting that he had quite drenched it.`);
+add("51(a)","D","toIndirect",`"I will wait with you one night longer," said the Swallow. "Shall I take him another ruby?" "Alas! I have no ruby now," said the Prince.`,`The Swallow said that it would wait with him one night longer and asked if it should take him another ruby. The Prince lamented that he had no ruby then.`);
+
+/* Exercise 51(b) dialogues */
+add("51(b)","D","toIndirect",`Samar: "How do you feel today, Ramen?" Ramen: "A little better. The doctor says I'm out of danger now."`,`Samar asked Ramen how he felt that day. Ramen replied that he felt a little better and added that the doctor said he was out of danger then.`);
+add("51(b)","D","toIndirect",`Foreman: "You are a trainee, aren't you?" Tom: "Yes, that's right." Foreman: "Have you ever been inside a factory before?" Tom: "No, not really."`,`The Foreman asked Tom if he was a trainee. Tom confirmed that he was. The Foreman then inquired whether Tom had ever been inside a factory before, to which Tom replied in the negative.`);
+add("51(b)","D","toIndirect",`Sudip: "Please, please do not disturb me. I am very busy." Babul: "I'm not disturbing you. I am simply listening to some music." Sudip: "It is the loud music that is disturbing me. Would you mind toning it down?"`,`Sudip earnestly requested Babul not to disturb him as he was very busy. Babul replied that he was not disturbing him but simply listening to music. Sudip clarified that the loud music was what disturbed him and asked if Babul would mind turning it down.`);
+add("51(b)","D","toIndirect",`Doctor: "You feel tired all the time, you say." Mrs. Sharma: "Yes, Doctor, I am always tired. Everything seems such an effort." Doctor: "And how long has this been going on?"`,`The Doctor noted that Mrs. Sharma had mentioned feeling tired all the time. Mrs. Sharma respectfully confirmed that she was always tired and that everything seemed like a great effort. The Doctor then asked her how long that condition had been going on.`);
+add("51(b)","D","toIndirect",`Amal: "I am sorry Sandip, I have got a bad report about you from your headmaster." Sandip: "Is it about an incident in the playground?" Amal: "Yes, and more." Sandip: "The boy called me names, and I lost my temper and hit him."`,`Amal regretfully informed Sandip that he had received a bad report about him from his headmaster. Sandip inquired if it was regarding an incident in the playground. Amal confirmed it and added there was more to it. Sandip explained in his defense that the boy had called him names, causing him to lose his temper and hit him.`);
+add("51(b)","D","toIndirect",`Nihar: "Father, some of my friends are going on a tour during the Puja vacation. I should like to go with them if you permit." Father: "What is your plan?" Nihar: "We propose to begin with Agra and end with Mussoorie."`,`Nihar informed his father that some of his friends were going on a tour during the Puja vacation and expressed his desire to join them if permitted. His father asked about their plan. Nihar replied that they proposed to start with Agra and end with Mussoorie.`);
+
+/* Exercise 51(c) summaries */
+add("51(c)","D","toIndirect",`Sudeshna invites Jharna to go to Digha for the weekend; Jharna explains why she cannot go.`,`Sudeshna invited Jharna to go to Digha with her in her car for the weekend starting Friday. Jharna thanked her for the invitation but declined, explaining that she had to remain present to attend to a patient undergoing surgery on Thursday.`);
+add("51(c)","D","toIndirect",`Vidyasagar asks his mother why she does not wear the new shawl; she explains why.`,`Vidyasagar asked his mother why she did not wear the new woollen shawl he had bought her. Bhagabati Debi appreciated the gift but refused to use it, pointing out that as long as many poor mothers in the village lacked basic winter clothing, she could not bring herself to enjoy such luxury.`);
+add("51(c)","D","toIndirect",`A traveller asks a local man for directions to the railway station.`,`A traveller asked a local man for directions to the railway station. The local man confirmed the route and guided him to walk straight ahead for two minutes and turn right at the second crossing.`);
+add("51(c)","D","toIndirect",`Report William Tell's apple-shooting scene as if you are Walter, the son.`,`My father initially refused to shoot, terrified that he might accidentally kill me. However, I wanted to save him from the cruel Gessler at all costs. I reassured my father that I was not afraid and expressed complete confidence in his marksmanship. Placing the apple on my head, I stood firmly under the tree and urged him to shoot, promising that I would not flinch or move a muscle.`);
+
+/* =========================================================
+   RENDER — Course map cards
+========================================================= */
+const courseMapEl = document.getElementById('courseMap');
+RULES.forEach(r=>{
+  const btn = document.createElement('button');
+  btn.className='quick-card';
+  btn.dataset.view='rules'; btn.dataset.jump=r.id;
+  btn.innerHTML = `<h3><span class="en">${r.en_title}</span><span class="bn">${r.bn_title}</span></h3>
+    <p><span class="en">Tap to open this section.</span><span class="bn">খুলতে ট্যাপ করো।</span></p>`;
+  courseMapEl.appendChild(btn);
+});
+document.getElementById('statRules').textContent = RULES.length;
+document.getElementById('statQ').textContent = BANK.length;
+
+/* Render rules */
+const rulesContainer = document.getElementById('rulesContainer');
+const tocJump = document.getElementById('tocJump');
+RULES.forEach(r=>{
+  const wrap = document.createElement('div');
+  wrap.id = 'rule-'+r.id;
+  wrap.style.marginBottom = '10px';
+  wrap.innerHTML = `<h2 class="section-title" style="font-size:19px; margin-top:26px;"><span class="en">${r.en_title}</span><span class="bn">${r.bn_title}</span></h2>
+    <div class="en">${r.html_en}</div><div class="bn">${r.html_bn}</div>`;
+  rulesContainer.appendChild(wrap);
+
+  const a = document.createElement('a');
+  a.href='javascript:void(0)';
+  a.innerHTML = `<span class="en">${r.en_title.replace(/^\d+\.\s*/,'')}</span><span class="bn">${r.bn_title.replace(/^[০-৯0-9]+\.\s*/,'')}</span>`;
+  a.addEventListener('click',()=>{ document.getElementById('rule-'+r.id).scrollIntoView({behavior:'smooth', block:'start'}); });
+  tocJump.appendChild(a);
+});
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+const views = document.querySelectorAll('.view');
+function showView(name, jumpId){
+  views.forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  document.querySelectorAll('.navitem').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.navitem[data-view="'+name+'"]').forEach(n=>{
+    if(!jumpId || n.dataset.jump===jumpId) n.classList.add('active');
+  });
+  document.getElementById('sidebar').classList.remove('open');
+  window.scrollTo({top:0});
+  if(name==='rules' && jumpId){
+    setTimeout(()=>{ const el=document.getElementById('rule-'+jumpId); if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); }, 60);
+  }
+}
+document.querySelectorAll('[data-view]').forEach(el=>{
+  el.addEventListener('click', ()=> showView(el.dataset.view, el.dataset.jump));
+});
+document.getElementById('menuToggle').addEventListener('click', ()=>{
+  document.getElementById('sidebar').classList.toggle('open');
+});
+
+/* Language toggle */
+const btnEn = document.getElementById('btnEn'), btnBn = document.getElementById('btnBn');
+function setLang(lang){
+  document.body.classList.toggle('lang-en', lang==='en');
+  document.body.classList.toggle('lang-bn', lang==='bn');
+  btnEn.classList.toggle('on', lang==='en');
+  btnBn.classList.toggle('on', lang==='bn');
+  try{ localStorage.setItem('narr_lang', lang); }catch(e){}
+}
+btnEn.addEventListener('click', ()=>setLang('en'));
+btnBn.addEventListener('click', ()=>setLang('bn'));
+try{ const saved = localStorage.getItem('narr_lang'); if(saved) setLang(saved); }catch(e){}
+
+/* Theme toggle */
+document.getElementById('themeToggle').addEventListener('click', ()=>{
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur==='dark' ? 'light' : (cur==='light' ? '' : 'dark');
+  if(next==='') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', next);
+  try{ localStorage.setItem('narr_theme', next); }catch(e){}
+});
+try{
+  const savedTheme = localStorage.getItem('narr_theme');
+  if(savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+}catch(e){}
+
+/* =========================================================
+   SEARCH
+========================================================= */
+const searchInput = document.getElementById('searchInput');
+const searchResults = document.getElementById('searchResults');
+const SEARCH_INDEX = [];
+RULES.forEach(r=>{
+  SEARCH_INDEX.push({label:r.en_title, type:'Rule', action:()=>showView('rules', r.id)});
+});
+BANK.forEach(b=>{
+  SEARCH_INDEX.push({label:b.q, type:'Ex. '+b.ex, action:()=>{ showView('bank'); setTimeout(()=>{ const el=document.querySelector('[data-cardid="'+b.id+'"]'); if(el){ el.scrollIntoView({behavior:'smooth', block:'center'}); el.style.borderColor='var(--mustard)'; setTimeout(()=>el.style.borderColor='',1600); } }, 120); }});
+});
+searchInput.addEventListener('input', ()=>{
+  const q = searchInput.value.trim().toLowerCase();
+  if(q.length<2){ searchResults.style.display='none'; return; }
+  const matches = SEARCH_INDEX.filter(i=>i.label.toLowerCase().includes(q)).slice(0,12);
+  if(!matches.length){ searchResults.innerHTML = '<div style="padding:12px; font-size:12.5px; color:var(--ink-faint);">No matches</div>'; searchResults.style.display='block'; return; }
+  searchResults.innerHTML = matches.map((m,idx)=>`<div class="search-hit" data-idx="${idx}" style="padding:9px 12px; font-size:12.8px; border-bottom:1px solid var(--line-soft); cursor:pointer;"><div style="font-size:10px; color:var(--mustard); font-weight:700; margin-bottom:2px;">${m.type}</div>${m.label.length>90?m.label.slice(0,90)+'…':m.label}</div>`).join('');
+  searchResults.style.display='block';
+  searchResults.querySelectorAll('.search-hit').forEach((el,idx)=>{
+    el.addEventListener('click', ()=>{ matches[idx].action(); searchResults.style.display='none'; searchInput.value=''; });
+    el.addEventListener('mouseenter', ()=> el.style.background='var(--paper-2)');
+    el.addEventListener('mouseleave', ()=> el.style.background='');
+  });
+});
+document.addEventListener('click', (e)=>{ if(!e.target.closest('.searchbox')) searchResults.style.display='none'; });
+
+/* =========================================================
+   QUESTION BANK
+========================================================= */
+const TYPE_LABELS = {A:'Assertive', Q:'Question', T:'Question Tag', I:'Imperative / Let', M:'Modal', O:'Optative / Exclamatory', TP:'Time & Place', D:'Dialogue / Summary'};
+const exFilter = document.getElementById('bankExerciseFilter');
+const typeFilter = document.getElementById('bankTypeFilter');
+const bankContainer = document.getElementById('bankContainer');
+const bankCount = document.getElementById('bankCount');
+
+const exList = [...new Set(BANK.map(b=>b.ex))];
+exFilter.innerHTML = '<option value="all">All exercises</option>' + exList.map(e=>`<option value="${e}">Exercise ${e}</option>`).join('');
+const typeList = [...new Set(BANK.map(b=>b.type))];
+typeFilter.innerHTML = '<option value="all">All sentence types</option>' + typeList.map(t=>`<option value="${t}">${TYPE_LABELS[t]}</option>`).join('');
+
+function renderBank(){
+  const exV = exFilter.value, typeV = typeFilter.value;
+  const filtered = BANK.filter(b=> (exV==='all'||b.ex===exV) && (typeV==='all'||b.type===typeV) );
+  bankCount.textContent = filtered.length + ' sentences';
+  bankContainer.innerHTML='';
+  if(!filtered.length){ bankContainer.innerHTML = '<div class="empty-state">No sentences match this filter.</div>'; return; }
+  filtered.forEach(b=>{
+    const card = document.createElement('div');
+    card.className='flashcard';
+    card.dataset.cardid = b.id;
+    card.innerHTML = `
+      <div class="fc-top">
+        <span class="fc-tag">Ex. ${b.ex} · ${TYPE_LABELS[b.type]} · ${b.dir==='toIndirect'?'→ Indirect':'→ Direct'}</span>
+      </div>
+      <div class="fc-q">${b.q}</div>
+      <div class="fc-hint">Tap to reveal the model answer</div>
+      <div class="fc-a">${b.a}</div>`;
+    card.addEventListener('click', ()=> card.classList.toggle('revealed'));
+    bankContainer.appendChild(card);
+  });
+}
+exFilter.addEventListener('change', renderBank);
+typeFilter.addEventListener('change', renderBank);
+renderBank();
+
+/* =========================================================
+   EXAM MODE
+========================================================= */
+const examTopic = document.getElementById('examTopic');
+examTopic.innerHTML = '<option value="all">All topics</option>' + typeList.map(t=>`<option value="${t}">${TYPE_LABELS[t]}</option>`).join('') + exList.map(e=>`<option value="ex:${e}">Exercise ${e} only</option>`).join('');
+
+let examState = null;
+function loadBestScore(topic){
+  try{
+    const raw = localStorage.getItem('narr_best_'+topic);
+    return raw ? JSON.parse(raw) : null;
+  }catch(e){ return null; }
+}
+function saveBestScore(topic, score, total){
+  try{
+    const cur = loadBestScore(topic);
+    if(!cur || (score/total) > (cur.score/cur.total)){
+      localStorage.setItem('narr_best_'+topic, JSON.stringify({score, total}));
+    }
+  }catch(e){}
+}
+function refreshBestLabel(){
+  const t = examTopic.value;
+  const best = loadBestScore(t);
+  document.getElementById('examBestScore').textContent = best ? `Best score for this topic: ${best.score} / ${best.total}` : '';
+}
+examTopic.addEventListener('change', refreshBestLabel);
+refreshBestLabel();
+
+function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+document.getElementById('startExamBtn').addEventListener('click', ()=>{
+  const topic = examTopic.value;
+  let pool;
+  if(topic==='all') pool = BANK;
+  else if(topic.startsWith('ex:')) pool = BANK.filter(b=>b.ex===topic.slice(3));
+  else pool = BANK.filter(b=>b.type===topic);
+  const count = Math.min(parseInt(document.getElementById('examCount').value)||10, pool.length);
+  const timePerQ = parseInt(document.getElementById('examTime').value)||0;
+  if(pool.length===0){ alert('No questions available for this topic.'); return; }
+  examState = {
+    topic, questions: shuffle(pool).slice(0,count), idx:0, score:0, timePerQ, timerInterval:null
+  };
+  document.getElementById('examSetup').style.display='none';
+  document.getElementById('examSummary').style.display='none';
+  document.getElementById('examRunning').style.display='block';
+  renderExamQuestion();
+});
+
+function renderExamQuestion(){
+  clearInterval(examState.timerInterval);
+  const q = examState.questions[examState.idx];
+  document.getElementById('examProgressLabel').textContent = `Question ${examState.idx+1} / ${examState.questions.length}`;
+  document.getElementById('examProgressFill').style.width = (100*examState.idx/examState.questions.length)+'%';
+  document.getElementById('examCardTag').textContent = `Ex. ${q.ex} · ${TYPE_LABELS[q.type]} · ${q.dir==='toIndirect'?'Convert to Indirect':'Convert to Direct'}`;
+  document.getElementById('examCardQ').textContent = q.q;
+  document.getElementById('examCardA').style.display='none';
+  document.getElementById('examCardA').textContent = q.a;
+  document.getElementById('examActionsReveal').style.display='flex';
+  document.getElementById('examActionsGrade').style.display='none';
+
+  const pill = document.getElementById('examTimerPill');
+  if(examState.timePerQ>0){
+    pill.style.display='inline-block';
+    let t = examState.timePerQ;
+    pill.textContent = t+'s';
+    examState.timerInterval = setInterval(()=>{
+      t--; pill.textContent = Math.max(t,0)+'s';
+      if(t<=0){ clearInterval(examState.timerInterval); revealExamAnswer(); }
+    },1000);
+  } else {
+    pill.style.display='none';
+  }
+}
+function revealExamAnswer(){
+  document.getElementById('examCardA').style.display='block';
+  document.getElementById('examActionsReveal').style.display='none';
+  document.getElementById('examActionsGrade').style.display='flex';
+}
+document.getElementById('examShowAnswerBtn').addEventListener('click', revealExamAnswer);
+
+function nextExamQuestion(correct){
+  if(correct) examState.score++;
+  examState.idx++;
+  if(examState.idx >= examState.questions.length){
+    finishExam();
+  } else {
+    renderExamQuestion();
+  }
+}
+document.getElementById('examCorrectBtn').addEventListener('click', ()=>nextExamQuestion(true));
+document.getElementById('examWrongBtn').addEventListener('click', ()=>nextExamQuestion(false));
+document.getElementById('examQuitBtn').addEventListener('click', ()=>{
+  if(confirm('End this exam now?')) finishExam();
+});
+
+function finishExam(){
+  clearInterval(examState.timerInterval);
+  document.getElementById('examRunning').style.display='none';
+  document.getElementById('examSummary').style.display='block';
+  document.getElementById('examProgressFill').style.width='100%';
+  const total = examState.idx;
+  document.getElementById('examSummaryScore').textContent = `${examState.score} / ${total}`;
+  const pct = total ? Math.round(100*examState.score/total) : 0;
+  let msg='Keep practising — review the rules and try again.';
+  if(pct>=90) msg='Excellent! You have a firm grasp of this topic.';
+  else if(pct>=70) msg='Good work — a little more practice will make this solid.';
+  else if(pct>=50) msg='You are getting there — revisit the rule cards for the tricky parts.';
+  document.getElementById('examSummaryMsg').textContent = msg;
+  saveBestScore(examState.topic, examState.score, total);
+}
+document.getElementById('examRetryBtn').addEventListener('click', ()=>{
+  document.getElementById('startExamBtn').click();
+});
+document.getElementById('examBackBtn').addEventListener('click', ()=>{
+  document.getElementById('examSummary').style.display='none';
+  document.getElementById('examSetup').style.display='block';
+  refreshBestLabel();
+});
+</script>
+</body>
+</html>
