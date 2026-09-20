@@ -37,19 +37,10 @@ function updateConnectionState() {
 }
 
 function showView(name, jumpId) {
-  const target = document.getElementById(`view-${name}`);
-  if (!target) return;
-  document.querySelectorAll('.view').forEach((view) => view.classList.remove('active'));
-  target.classList.add('active');
-  document.querySelectorAll('.navitem').forEach((item) => item.classList.remove('active'));
-  document.querySelectorAll(`.navitem[data-view="${name}"]`).forEach((item) => {
-    if (!jumpId || item.dataset.jump === jumpId) item.classList.add('active');
-  });
-  document.getElementById('sidebar')?.classList.remove('open');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  if (name === 'rules' && jumpId) {
-    setTimeout(() => document.getElementById(`rule-${jumpId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+  if (typeof window.__narrShowView === 'function') {
+    return window.__narrShowView(name, jumpId);
   }
+  console.warn('showView: core not ready');
 }
 
 function bindExistingControls() {
