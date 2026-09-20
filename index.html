@@ -1,1 +1,163 @@
-LOADING
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Narration Master — Direct & Indirect Speech</title>
+<meta name="theme-color" content="#2F6F62">
+<link rel="manifest" href="./manifest.webmanifest">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Hind+Siliguri:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F6F3EC;--paper-2:#EFEADD;--ink:#20261F;--ink-soft:#4B5548;--ink-faint:#8B9585;--teal:#2F6F62;--teal-deep:#1F4B41;--mustard:#C1852B;--mustard-soft:#F2E2C4;--card:#FFF;--line:rgba(32,38,31,.14);--line-soft:rgba(32,38,31,.08);--shadow:0 1px 2px rgba(32,38,31,.06);--ok:#2F6F45;--bad:#A6432F;--font-head:"Source Serif 4",Georgia,serif;--font-body:Inter,system-ui,sans-serif;--font-bn:"Hind Siliguri",Inter,sans-serif;--radius:10px}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--paper:#191C17;--paper-2:#20241D;--ink:#EDEAE0;--ink-soft:#B8BFAF;--ink-faint:#7C8574;--teal:#6FBDA8;--teal-deep:#89D2BE;--mustard:#E0A44C;--mustard-soft:#3A3221;--card:#222620;--line:rgba(237,234,224,.14);--line-soft:rgba(237,234,224,.08);--shadow:0 1px 3px rgba(0,0,0,.4);--ok:#7BC98E;--bad:#E08876}}
+:root[data-theme=dark]{--paper:#191C17;--paper-2:#20241D;--ink:#EDEAE0;--ink-soft:#B8BFAF;--ink-faint:#7C8574;--teal:#6FBDA8;--teal-deep:#89D2BE;--mustard:#E0A44C;--mustard-soft:#3A3221;--card:#222620;--line:rgba(237,234,224,.14);--line-soft:rgba(237,234,224,.08);--shadow:0 1px 3px rgba(0,0,0,.4);--ok:#7BC98E;--bad:#E08876}
+*{box-sizing:border-box}html,body{margin:0;padding:0}body{background:var(--paper);color:var(--ink);font-family:var(--font-body);line-height:1.55;min-height:100vh}
+body.lang-bn .en{display:none}body.lang-en .bn{display:none}.bn{font-family:var(--font-bn)}
+.shell{display:flex;min-height:100vh}.sidebar{width:270px;flex:0 0 270px;background:var(--paper-2);border-right:1px solid var(--line);padding:20px 14px 90px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{display:flex;align-items:baseline;gap:8px;padding:4px 8px 16px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.brand-mark{width:34px;height:34px;border-radius:8px;background:linear-gradient(155deg,var(--teal),var(--teal-deep));display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-head);font-weight:700;font-size:17px}
+.brand-text{font-family:var(--font-head);font-size:17px;font-weight:600}.brand-sub{font-size:11px;color:var(--ink-faint)}
+.searchbox{position:relative;margin:0 6px 16px}.searchbox input{width:100%;padding:9px 12px 9px 32px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:13.5px}
+.searchbox svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--ink-faint)}
+.navgroup{margin-bottom:6px}.navgroup-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-faint);padding:10px 10px 4px}
+.navitem{display:flex;align-items:center;gap:9px;width:100%;text-align:left;padding:8px 10px;border-radius:8px;border:none;background:transparent;color:var(--ink-soft);font-size:13.8px;cursor:pointer;font-family:var(--font-body)}
+.navitem:hover{background:var(--line-soft);color:var(--ink)}.navitem.active{background:var(--teal);color:#fff;font-weight:600}
+.navitem .dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.55}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:5;background:var(--paper);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:12px 22px}
+.menu-toggle{display:none;background:none;border:1px solid var(--line);border-radius:8px;padding:7px 9px;color:var(--ink);cursor:pointer}
+.topbar-title{font-family:var(--font-head);font-size:15px;font-weight:600;flex:1}
+.langtoggle{display:flex;border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.langtoggle button{border:none;background:var(--card);color:var(--ink-soft);padding:6px 13px;font-size:12.5px;cursor:pointer;font-weight:600}
+.langtoggle button.on{background:var(--teal);color:#fff}
+.themetoggle{border:1px solid var(--line);background:var(--card);border-radius:20px;padding:6px 11px;font-size:12.5px;cursor:pointer;color:var(--ink-soft)}
+.content{padding:26px 30px 80px;max-width:900px;width:100%;margin:0 auto}
+.view{display:none}.view.active{display:block}
+.hero{background:linear-gradient(155deg,var(--teal-deep),var(--teal));border-radius:16px;padding:34px 30px;color:#fff;margin-bottom:26px}
+.hero h1{font-family:var(--font-head);font-size:clamp(24px,4vw,32px);margin:0 0 8px;font-weight:600}
+.hero p{margin:0;opacity:.92;font-size:14.5px;max-width:60ch}
+.hero-stats{display:flex;gap:22px;margin-top:20px;flex-wrap:wrap}.hero-stat b{display:block;font-family:var(--font-head);font-size:22px}.hero-stat span{font-size:11.5px;opacity:.85}
+.quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:30px}
+.quick-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 17px;cursor:pointer;text-align:left;font-family:var(--font-body);box-shadow:var(--shadow)}
+.quick-card:hover{border-color:var(--teal)}.quick-card h3{margin:0 0 5px;font-family:var(--font-head);font-size:16px}.quick-card p{margin:0;font-size:12.8px;color:var(--ink-soft)}
+.quick-card .tag{display:inline-block;margin-top:9px;font-size:10.5px;padding:2px 8px;border-radius:20px;background:var(--mustard-soft);color:var(--mustard);font-weight:600}
+h2.section-title{font-family:var(--font-head);font-size:22px;font-weight:600;margin:0 0 4px}.section-sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 20px}
+.rule-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow)}
+.rule-card h3{font-family:var(--font-head);font-size:17px;margin:0 0 10px;color:var(--teal-deep)}.rule-card p{margin:0 0 10px;font-size:14px}.rule-card ul{margin:0 0 10px;padding-left:20px;font-size:14px}
+.example{background:var(--paper-2);border-left:3px solid var(--teal);border-radius:0 8px 8px 0;padding:9px 13px;margin:8px 0;font-size:13.5px}
+.example .d{color:var(--ink-soft)}.example .arrow{color:var(--mustard);font-weight:700;margin:0 6px}.example .i{color:var(--ink);font-weight:500}
+table.rule-table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}table.rule-table th,table.rule-table td{border:1px solid var(--line);padding:7px 9px;text-align:left}table.rule-table th{background:var(--paper-2)}
+.flashcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow);cursor:pointer}
+.flashcard .fc-top{display:flex;justify-content:space-between;gap:10px}.flashcard .fc-tag{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--mustard);font-weight:700}
+.flashcard .fc-q{font-size:14.5px;margin-top:6px;font-weight:500}.flashcard .fc-hint{font-size:11.5px;color:var(--ink-faint);margin-top:8px}
+.flashcard .fc-a{display:none;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);font-size:14px;color:var(--teal-deep);font-weight:500}
+.flashcard.revealed .fc-a{display:block}.flashcard.revealed .fc-hint{display:none}.fc-note{font-size:12.5px;color:var(--ink-soft);margin-top:6px}.fc-num{font-size:11px;color:var(--ink-faint)}.fc-answer{font-weight:500;color:var(--teal-deep)}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;font-size:12.5px;cursor:pointer;color:var(--ink)}.chip.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.course-map{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:12px}
+.map-item{display:flex;align-items:center;gap:10px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px;cursor:pointer;font:inherit;color:var(--ink)}.map-item:hover{border-color:var(--teal)}
+.map-num{width:28px;height:28px;border-radius:8px;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.search-hit{display:block;width:100%;text-align:left;padding:8px 12px;border:0;background:transparent;cursor:pointer;font:inherit;color:var(--ink);border-bottom:1px solid var(--line-soft)}.search-hit:hover{background:var(--paper-2)}
+.exam-setup{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)}
+.exam-setup label{display:block;font-size:13px;font-weight:600;margin:14px 0 6px}
+.exam-setup select,.exam-setup input[type=number]{padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);font-size:13.5px;width:100%;max-width:260px}
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--teal);color:#fff;border:none;padding:10px 18px;border-radius:8px;font-size:13.8px;font-weight:600;cursor:pointer;font-family:var(--font-body)}
+.btn:hover{background:var(--teal-deep)}.btn.ghost{background:transparent;color:var(--teal-deep);border:1px solid var(--line)}.btn.warn{background:var(--bad)}
+.exam-progress{display:flex;align-items:center;gap:12px;margin-bottom:18px}.progress-track{flex:1;height:7px;background:var(--line-soft);border-radius:6px;overflow:hidden}.progress-fill{height:100%;background:var(--teal);border-radius:6px;transition:width .25s}
+.exam-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:28px 26px;box-shadow:var(--shadow);text-align:center}
+.exam-card .fc-tag{display:block;margin-bottom:14px}.exam-card .fc-q{font-size:17px;margin-bottom:6px}
+.exam-reveal-area{min-height:70px;margin:16px 0}.exam-answer{font-size:15px;color:var(--teal-deep);font-weight:500;padding-top:14px;border-top:1px dashed var(--line)}
+.exam-actions{display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+.exam-summary{text-align:center;padding:20px 0}.exam-summary .big{font-family:var(--font-head);font-size:44px;color:var(--teal-deep);margin:8px 0}
+footer.appfoot{text-align:center;font-size:11.5px;color:var(--ink-faint);padding:26px 0 10px}
+@media(max-width:860px){.sidebar{position:fixed;left:0;top:0;z-index:20;transform:translateX(-100%);transition:transform .2s}.sidebar.open{transform:translateX(0)}.menu-toggle{display:inline-flex}.content{padding:20px 16px 70px}}
+</style>
+</head>
+<body class="lang-en">
+<div class="shell">
+<aside class="sidebar" id="sidebar">
+<div class="brand"><div class="brand-mark">N</div><div><div class="brand-text">Narration Master</div><div class="brand-sub"><span class="en">Direct & Indirect Speech</span><span class="bn">প্রত্যক্ষ ও পরোক্ষ উক্তি</span></div></div></div>
+<div class="searchbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+<input id="searchInput" type="text" placeholder="Search rules, examples…">
+<div id="searchResults" style="position:absolute;top:40px;left:0;right:0;background:var(--card);border:1px solid var(--line);border-radius:8px;max-height:260px;overflow-y:auto;z-index:30;display:none;box-shadow:0 6px 20px rgba(0,0,0,.15)"></div></div>
+<div class="navgroup"><div class="navgroup-label"><span class="en">Overview</span><span class="bn">সারসংক্ষেপ</span></div>
+<button class="navitem" data-view="home"><span class="dot"></span><span class="en">Home</span><span class="bn">হোম</span></button></div>
+<div class="navgroup"><div class="navgroup-label"><span class="en">Rules & Concepts</span><span class="bn">নিয়মাবলী</span></div>
+<button class="navitem" data-view="rules" data-jump="fundamentals"><span class="dot"></span><span class="en">Fundamentals</span><span class="bn">মূল ধারণা</span></button>
+<button class="navitem" data-view="rules" data-jump="assertive"><span class="dot"></span><span class="en">Assertive Sentences</span><span class="bn">বিবৃতিমূলক বাক্য</span></button>
+<button class="navitem" data-view="rules" data-jump="interrogative"><span class="dot"></span><span class="en">Questions</span><span class="bn">প্রশ্নবাচক বাক্য</span></button>
+<button class="navitem" data-view="rules" data-jump="tags"><span class="dot"></span><span class="en">Question Tags</span><span class="bn">প্রশ্ন-ট্যাগ</span></button>
+<button class="navitem" data-view="rules" data-jump="imperative"><span class="dot"></span><span class="en">Imperatives & Let</span><span class="bn">অনুজ্ঞাসূচক ও লেট</span></button>
+<button class="navitem" data-view="rules" data-jump="modals"><span class="dot"></span><span class="en">Modal Verbs</span><span class="bn">মোডাল ক্রিয়া</span></button>
+<button class="navitem" data-view="rules" data-jump="optative"><span class="dot"></span><span class="en">Optative & Exclamatory</span><span class="bn">ইচ্ছা ও উল্লাসসূচক</span></button>
+<button class="navitem" data-view="rules" data-jump="timeplace"><span class="dot"></span><span class="en">Time & Place Words</span><span class="bn">কাল ও স্থানশব্দ</span></button>
+<button class="navitem" data-view="rules" data-jump="misc"><span class="dot"></span><span class="en">Dialogues & Summaries</span><span class="bn">কথোপকথন ও সারসংক্ষেপ</span></button></div>
+<div class="navgroup"><div class="navgroup-label"><span class="en">Practice</span><span class="bn">অনুশীলন</span></div>
+<button class="navitem" data-view="bank"><span class="dot"></span><span class="en">Question Bank</span><span class="bn">প্রশ্ন ব্যাংক</span></button>
+<button class="navitem" data-view="exam"><span class="dot"></span><span class="en">Exam Mode</span><span class="bn">পরীক্ষা মোড</span></button></div>
+</aside>
+<div class="main">
+<div class="topbar">
+<button class="menu-toggle" id="menuToggle" aria-label="Menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+<div class="topbar-title" id="topbarTitle"><span class="en">Direct & Indirect Narration</span><span class="bn">প্রত্যক্ষ ও পরোক্ষ উক্তি</span></div>
+<button class="themetoggle" id="themeToggle">🌓</button>
+<div class="langtoggle"><button id="btnEn" class="on">EN</button><button id="btnBn">বাংলা</button></div>
+</div>
+<div class="content">
+<section class="view active" id="view-home">
+<div class="hero"><h1><span class="en">Master Direct & Indirect Speech</span><span class="bn">প্রত্যক্ষ ও পরোক্ষ উক্তি আয়ত্ত করো</span></h1>
+<p><span class="en">Every rule, exception, and exercise — bilingual explanation, practice bank, and exam mode.</span><span class="bn">প্রতিটি নিয়ম, ব্যতিক্রম ও অনুশীলনী — দ্বিভাষিক ব্যাখ্যা, অনুশীলনী ব্যাংক ও পরীক্ষা মোড।</span></p>
+<div class="hero-stats"><div class="hero-stat"><b id="statRules">9</b><span class="en">Rule sections</span><span class="bn">নিয়ম বিভাগ</span></div>
+<div class="hero-stat"><b id="statQ">0</b><span class="en">Practice sentences</span><span class="bn">অনুশীলনী বাক্য</span></div></div></div>
+<h2 class="section-title"><span class="en">Jump in</span><span class="bn">শুরু করো</span></h2>
+<div class="quick-grid">
+<button class="quick-card" data-view="rules" data-jump="fundamentals"><h3><span class="en">Learn the rules</span><span class="bn">নিয়ম শেখো</span></h3><p><span class="en">Tense shifts, pronouns, reporting verbs.</span><span class="bn">কাল, সর্বনাম, রিপোর্টিং ক্রিয়া।</span></p><span class="tag">9 sections</span></button>
+<button class="quick-card" data-view="bank"><h3><span class="en">Practice with flashcards</span><span class="bn">ফ্ল্যাশকার্ড অনুশীলন</span></h3><p><span class="en">Tap to reveal answers.</span><span class="bn">উত্তর দেখতে ট্যাপ করো।</span></p><span class="tag">144 sentences</span></button>
+<button class="quick-card" data-view="exam"><h3><span class="en">Take an exam</span><span class="bn">পরীক্ষা দাও</span></h3><p><span class="en">Self-scored practice test.</span><span class="bn">স্ব-মূল্যায়ন পরীক্ষা।</span></p><span class="tag">Exam mode</span></button>
+</div>
+<h2 class="section-title"><span class="en">Course map</span><span class="bn">কোর্স মানচিত্র</span></h2>
+<div class="course-map" id="courseMap"></div>
+</section>
+<section class="view" id="view-rules">
+<h2 class="section-title"><span class="en">Rules & Concepts</span><span class="bn">নিয়মাবলী</span></h2>
+<div id="rulesContainer"></div>
+</section>
+<section class="view" id="view-bank">
+<h2 class="section-title"><span class="en">Question Bank</span><span class="bn">প্রশ্ন ব্যাংক</span></h2>
+<p class="section-sub" id="bankCount"></p>
+<div id="bankFilters" class="chip-row"></div>
+<div id="bankContainer"></div>
+</section>
+<section class="view" id="view-exam">
+<h2 class="section-title"><span class="en">Exam Mode</span><span class="bn">পরীক্ষা মোড</span></h2>
+<div id="examSetup" class="exam-setup">
+<label><span class="en">Topic</span><span class="bn">বিষয়</span></label><select id="examTopic"></select>
+<label><span class="en">Number of questions</span><span class="bn">প্রশ্ন সংখ্যা</span></label><input type="number" id="examCount" min="5" max="50" value="10">
+<div style="margin-top:20px"><button class="btn" id="startExamBtn"><span class="en">Start exam</span><span class="bn">পরীক্ষা শুরু</span></button></div>
+</div>
+<div id="examRunning" style="display:none">
+<div class="exam-progress"><span id="examProgressLabel"></span><div class="progress-track"><div class="progress-fill" id="examProgressFill" style="width:0%"></div></div></div>
+<div class="exam-card"><span class="fc-tag" id="examCardTag"></span><div class="fc-q" id="examCardQ"></div>
+<div class="exam-reveal-area"><div class="exam-answer" id="examCardA" style="display:none"></div></div>
+<div class="exam-actions" id="examActionsReveal"><button class="btn ghost" id="examShowAnswerBtn"><span class="en">Show answer</span><span class="bn">উত্তর দেখাও</span></button>
+<button class="btn warn" id="examQuitBtn"><span class="en">End</span><span class="bn">শেষ</span></button></div>
+<div class="exam-actions" id="examActionsGrade" style="display:none">
+<button class="btn" id="examCorrectBtn" style="background:var(--ok)"><span class="en">✓ Correct</span><span class="bn">✓ সঠিক</span></button>
+<button class="btn warn" id="examWrongBtn"><span class="en">✗ Wrong</span><span class="bn">✗ ভুল</span></button></div>
+</div></div>
+<div id="examSummary" style="display:none" class="exam-summary">
+<div class="big" id="examSummaryScore"></div><p id="examSummaryMsg"></p>
+<button class="btn" id="examRetryBtn"><span class="en">Try again</span><span class="bn">আবার</span></button>
+<button class="btn ghost" id="examBackBtn"><span class="en">Back</span><span class="bn">ফিরে যাও</span></button>
+</div>
+</section>
+<footer class="appfoot"><span class="en">Based on A Text-Book of Higher English Grammar — Direct & Indirect Narration.</span><span class="bn">A Text-Book of Higher English Grammar অবলম্বনে।</span></footer>
+</div></div></div>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./service-worker.js').catch(()=>{});});}
+</script>
+<script src="./app-enhancements.js"></script>
+<script src="./data-rules.js"></script>
+<script src="./data-bank.js"></script>
+<script src="./app-logic.js"></script>
+</body>
+</html>
