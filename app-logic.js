@@ -1,4 +1,3 @@
-
 const TOPIC_LABELS = {
   assertive: { en: "Assertive", bn: "বিবৃতিমূলক" },
   interrogative: { en: "Questions", bn: "প্রশ্নবাচক" },
@@ -12,24 +11,26 @@ const TOPIC_LABELS = {
 let currentView = "home";
 let bankFilter = "all";
 let examState = null;
+
 function $(sel, root = document) { return root.querySelector(sel); }
 function $$(sel, root = document) { return Array.from(root.querySelectorAll(sel)); }
-function isBn() {
-  return document.body.classList.contains("lang-bn");
-}
+function isBn() { return document.body.classList.contains("lang-bn"); }
+
 function showView(view, jumpId) {
   currentView = view;
   $$(".view").forEach(v => v.classList.remove("active"));
   const el = document.getElementById("view-" + view);
   if (el) el.classList.add("active");
   $$(".navitem").forEach(n => {
-    n.classList.toggle("active", n.dataset.view === view && (!n.dataset.jump || n.dataset.jump === jumpId));
+    const match = n.dataset.view === view && (!n.dataset.jump || !jumpId || n.dataset.jump === jumpId);
+    n.classList.toggle("active", match);
   });
   document.body.classList.remove("sidebar-open");
+  document.getElementById("sidebar")?.classList.remove("open");
   if (view === "rules") renderRules(jumpId);
-  if (view === "bank") renderBank();
+  if (view === "bank") { setupBankFilters(); renderBank(); }
   if (view === "exam") setupExamPanel();
-  if (view === "home") updateStats();
+  if (view === "home") { updateStats(); buildCourseMap(); }
   const titles = {
     home: { en: "Direct & Indirect Narration", bn: "প্রত্যক্ষ ও পরোক্ষ উক্তি" },
     rules: { en: "Rules & Concepts", bn: "নিয়মাবলী" },
@@ -43,32 +44,36 @@ function showView(view, jumpId) {
     setTimeout(() => {
       const target = document.getElementById("rule-" + jumpId);
       if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 50);
+    }, 80);
   }
 }
 window.__narrShowView = showView;
+
 function renderRules(jumpId) {
-  const host = $("#rulesContainer") || $("#view-rules");
+  const host = $("#rulesContainer");
   if (!host || typeof RULES === "undefined") return;
   const lang = isBn() ? "bn" : "en";
   host.innerHTML = RULES.map(r => {
-    const body = lang === "bn" ? r.html_bn : r.html_en;
-    return `<div class="rule-section" id="rule-${r.id}"><h2 class="section-title">${lang === "bn" ? r.bn_title : r.en_title}</h2>${body}</div>`;
+    const body = lang === "bn" ? (r.html_bn || "") : (r.html_en || "");
+    const title = lang === "bn" ? r.bn_title : r.en_title;
+    return `<div class="rule-section" id="rule-${r.id}"><h2 class="section-title">${title}</h2>${body}</div>`;
   }).join("");
 }
+
 function updateStats() {
   const sr = $("#statRules");
-  const sb = $("#statBank");
+  const sq = $("#statQ") || $("#statBank");
   if (sr && typeof RULES !== "undefined") sr.textContent = String(RULES.length);
-  if (sb && typeof BANK !== "undefined") sb.textContent = String(BANK.length);
+  if (sq && typeof BANK !== "undefined") sq.textContent = String(BANK.length);
 }
+
 function setupBankFilters() {
   const host = $("#bankFilters");
   if (!host || typeof BANK === "undefined") return;
   const topics = ["all", ...new Set(BANK.map(x => x.topic))];
   host.innerHTML = topics.map(t => {
     const label = t === "all" ? (isBn() ? "সব" : "All") : (TOPIC_LABELS[t] ? (isBn() ? TOPIC_LABELS[t].bn : TOPIC_LABELS[t].en) : t);
-    return `<button class="chip${t === bankFilter ? " on" : ""}" data-filter="${t}">${label}</button>`;
+    return `<button type="button" class="chip${t === bankFilter ? " on" : ""}" data-filter="${t}">${label}</button>`;
   }).join("");
   host.querySelectorAll(".chip").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -78,6 +83,7 @@ function setupBankFilters() {
     });
   });
 }
+
 function renderBank() {
   const host = $("#bankContainer");
   const countEl = $("#bankCount");
@@ -98,6 +104,7 @@ function renderBank() {
     card.addEventListener("click", () => card.classList.toggle("revealed"));
   });
 }
+
 function setupSearch() {
   const input = $("#searchInput");
   const results = $("#searchResults");
@@ -108,7 +115,7 @@ function setupSearch() {
     const hits = [];
     if (typeof RULES !== "undefined") {
       RULES.forEach(r => {
-        const blob = (r.en_title + r.bn_title + r.html_en + r.html_bn).toLowerCase();
+        const blob = ((r.en_title||"") + (r.bn_title||"") + (r.html_en||"") + (r.html_bn||"")).toLowerCase();
         if (blob.includes(q)) hits.push({ type: "rule", id: r.id, title: isBn() ? r.bn_title : r.en_title });
       });
     }
@@ -119,7 +126,7 @@ function setupSearch() {
       });
     }
     results.innerHTML = hits.slice(0, 12).map(h =>
-      `<button class="search-hit" data-type="${h.type}" data-id="${h.id}">${h.title}</button>`
+      `<button type="button" class="search-hit" data-type="${h.type}" data-id="${h.id}">${h.title}</button>`
     ).join("") || `<div class="search-hit">No results</div>`;
     results.style.display = "block";
     results.querySelectorAll(".search-hit").forEach(btn => {
@@ -135,37 +142,75 @@ function setupSearch() {
     if (!results.contains(e.target) && e.target !== input) results.style.display = "none";
   });
 }
+
 function buildCourseMap() {
   const host = $("#courseMap");
   if (!host || typeof RULES === "undefined") return;
   host.innerHTML = RULES.map((r, i) =>
-    `<button class="map-item" data-view="rules" data-jump="${r.id}"><span class="map-num">${i + 1}</span><span>${isBn() ? r.bn_title : r.en_title}</span></button>`
+    `<button type="button" class="map-item" data-view="rules" data-jump="${r.id}"><span class="map-num">${i + 1}</span><span>${isBn() ? r.bn_title : r.en_title}</span></button>`
   ).join("");
   host.querySelectorAll(".map-item").forEach(btn => {
     btn.addEventListener("click", () => showView(btn.dataset.view, btn.dataset.jump));
   });
 }
+
 function setupExamPanel() {
   const setup = $("#examSetup");
-  const play = $("#examPlay");
+  const running = $("#examRunning");
   const summary = $("#examSummary");
   if (setup) setup.style.display = "block";
-  if (play) play.style.display = "none";
+  if (running) running.style.display = "none";
   if (summary) summary.style.display = "none";
-  const startBtn = $("#examStartBtn");
+  const sel = $("#examTopic");
+  if (sel && typeof BANK !== "undefined" && !sel.dataset.filled) {
+    const topics = ["all", ...new Set(BANK.map(x => x.topic))];
+    sel.innerHTML = topics.map(t => {
+      const label = t === "all" ? (isBn() ? "সব" : "All topics") : (TOPIC_LABELS[t] ? (isBn() ? TOPIC_LABELS[t].bn : TOPIC_LABELS[t].en) : t);
+      return `<option value="${t}">${label}</option>`;
+    }).join("");
+    sel.dataset.filled = "1";
+  }
+  const startBtn = $("#startExamBtn");
   if (startBtn && !startBtn.dataset.bound) {
     startBtn.dataset.bound = "1";
     startBtn.addEventListener("click", startExam);
   }
-  $["#examRevealBtn"]?.addEventListener("click", () => {
-    $("#examCardA").style.display = "block";
-    $("#examRevealBtn").style.display = "none";
-  });
-  $["#examCorrectBtn"]?.addEventListener("click", () => gradeExam(true));
-  $["#examWrongBtn"]?.addEventListener("click", () => gradeExam(false));
-  $["#examRetryBtn"]?.addEventListener("click", startExam);
-  $["#examBackBtn"]?.addEventListener("click", setupExamPanel);
+  const showBtn = $("#examShowAnswerBtn");
+  if (showBtn && !showBtn.dataset.bound) {
+    showBtn.dataset.bound = "1";
+    showBtn.addEventListener("click", () => {
+      $("#examCardA").style.display = "block";
+      $("#examActionsReveal").style.display = "none";
+      $("#examActionsGrade").style.display = "flex";
+    });
+  }
+  const correctBtn = $("#examCorrectBtn");
+  if (correctBtn && !correctBtn.dataset.bound) {
+    correctBtn.dataset.bound = "1";
+    correctBtn.addEventListener("click", () => gradeExam(true));
+  }
+  const wrongBtn = $("#examWrongBtn");
+  if (wrongBtn && !wrongBtn.dataset.bound) {
+    wrongBtn.dataset.bound = "1";
+    wrongBtn.addEventListener("click", () => gradeExam(false));
+  }
+  const retryBtn = $("#examRetryBtn");
+  if (retryBtn && !retryBtn.dataset.bound) {
+    retryBtn.dataset.bound = "1";
+    retryBtn.addEventListener("click", startExam);
+  }
+  const backBtn = $("#examBackBtn");
+  if (backBtn && !backBtn.dataset.bound) {
+    backBtn.dataset.bound = "1";
+    backBtn.addEventListener("click", setupExamPanel);
+  }
+  const quitBtn = $("#examQuitBtn");
+  if (quitBtn && !quitBtn.dataset.bound) {
+    quitBtn.dataset.bound = "1";
+    quitBtn.addEventListener("click", finishExam);
+  }
 }
+
 function startExam() {
   if (typeof BANK === "undefined") return;
   const n = Math.min(parseInt($("#examCount")?.value || "10", 10) || 10, BANK.length);
@@ -179,36 +224,46 @@ function startExam() {
   examState = { items: pool.slice(0, n), idx: 0, correct: 0 };
   $("#examSetup").style.display = "none";
   $("#examSummary").style.display = "none";
-  $("#examPlay").style.display = "block";
+  $("#examRunning").style.display = "block";
   showExamCard();
 }
+
 function showExamCard() {
   const st = examState;
   if (!st || st.idx >= st.items.length) { finishExam(); return; }
   const item = st.items[st.idx];
   const tag = TOPIC_LABELS[item.topic] ? (isBn() ? TOPIC_LABELS[item.topic].bn : TOPIC_LABELS[item.topic].en) : item.topic;
-  $("#examProgressText").textContent = `${st.idx + 1} / ${st.items.length}`;
-  $("#examProgressFill").style.width = ((st.idx / st.items.length) * 100) + "%";
+  const prog = $("#examProgressLabel");
+  if (prog) prog.textContent = `${st.idx + 1} / ${st.items.length}`;
+  const fill = $("#examProgressFill");
+  if (fill) fill.style.width = ((st.idx / st.items.length) * 100) + "%";
   $("#examCardTag").textContent = tag;
   $("#examCardQ").textContent = item.direct;
   $("#examCardA").textContent = item.indirect + (item.note ? "\n" + item.note : "");
   $("#examCardA").style.display = "none";
-  $("#examRevealBtn").style.display = "inline-flex";
+  $("#examActionsReveal").style.display = "flex";
+  $("#examActionsGrade").style.display = "none";
 }
+
 function gradeExam(ok) {
   if (!examState) return;
   if (ok) examState.correct++;
   examState.idx++;
   showExamCard();
 }
+
 function finishExam() {
   const st = examState;
-  $("#examPlay").style.display = "none";
+  if (!st) return;
+  $("#examRunning").style.display = "none";
   $("#examSummary").style.display = "block";
   const pct = st.items.length ? Math.round((st.correct / st.items.length) * 100) : 0;
-  $("#examScoreBig").textContent = pct + "%";
-  $("#examScoreDetail").textContent = `${st.correct} / ${st.items.length} correct`;
+  const scoreEl = $("#examSummaryScore");
+  if (scoreEl) scoreEl.textContent = pct + "%";
+  const msg = $("#examSummaryMsg");
+  if (msg) msg.textContent = `${st.correct} / ${st.items.length} correct`;
 }
+
 function bindNav() {
   $$("[data-view]").forEach(el => {
     if (el.dataset.logicBound) return;
@@ -216,13 +271,15 @@ function bindNav() {
     el.addEventListener("click", () => showView(el.dataset.view, el.dataset.jump));
   });
 }
+
 function refreshLangDependent() {
   if (currentView === "rules") renderRules();
   if (currentView === "bank") { setupBankFilters(); renderBank(); }
-  if (currentView === "exam" && $("#examSetup")?.style.display !== "none") setupExamPanel();
+  if (currentView === "exam") setupExamPanel();
   buildCourseMap();
   updateStats();
 }
+
 document.addEventListener("DOMContentLoaded", () => {
   updateStats();
   buildCourseMap();
