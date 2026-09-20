@@ -1,5 +1,5 @@
-const APP_CACHE = 'narration-master-app-v5';
-const ASSET_CACHE = 'narration-master-assets-v5';
+const APP_CACHE = 'narration-master-app-v6';
+const ASSET_CACHE = 'narration-master-assets-v6';
 const OFFLINE_PAGE = './index.html';
 
 const APP_SHELL = [
@@ -7,9 +7,7 @@ const APP_SHELL = [
   './index.html',
   './manifest.webmanifest',
   './assets/app-icon.svg',
-  './rules-data.js',
-  './bank-data.js',
-  './app-logic.js',
+  './app-core.js',
   './app-enhancements.js'
 ];
 
